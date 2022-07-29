@@ -27,6 +27,8 @@ import theme from './components/VideoCall/VideoFrontend/theme';
 import { Callback } from './components/VideoCall/VideoFrontend/types';
 import useConnectionOptions from './components/VideoCall/VideoFrontend/utils/useConnectionOptions/useConnectionOptions';
 import VideoOverlay from './components/VideoCall/VideoOverlay/VideoOverlay';
+import SignUp from './components/Welcome/SignUp';
+import Welcome from './components/Welcome/Welcome';
 import WorldMap from './components/world/WorldMap';
 import ConversationAreasContext from './contexts/ConversationAreasContext';
 import CoveyAppContext from './contexts/CoveyAppContext';
@@ -273,14 +275,16 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
 
   const page = useMemo(() => {
     if (!appState.sessionToken) {
-      return <Login doLogin={setupGameController} />;
+      // return <Login doLogin={setupGameController} />;
+      // return <Welcome history={[]} />;
+      return <SignUp />;
     }
     if (!videoInstance) {
       return <div>Loading...</div>;
     }
     return (
       <div>
-        <WorldMap />
+        <WorldMap />x
         <VideoOverlay preferredMode='fullwidth' />
       </div>
     );
