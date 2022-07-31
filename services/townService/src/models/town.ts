@@ -1,5 +1,5 @@
-import mongoose, {Schema} from 'mongoose';
-import ITown from '../interfaces/town'
+import mongoose, { Schema } from 'mongoose';
+import ITown from '../interfaces/town';
 
 const TownSchema: Schema = new Schema(
   {
@@ -8,11 +8,11 @@ const TownSchema: Schema = new Schema(
     townUpdatePassword: { type: String, required: true, max: 20 },
     isPublic: { type: Boolean, required: true },
     friendlyName: { type: String, required: true, max: 10 },
-    capacity: { type: Number, required: true, max: 20 }
+    capacity: { type: Number, required: true, max: 20 },
   },
   {
-    timestamps: true
-  }
-)
+    timestamps: true,
+  },
+);
 
 export default mongoose.model<ITown>('Town', TownSchema);

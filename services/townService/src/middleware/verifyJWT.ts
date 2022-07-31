@@ -1,24 +1,25 @@
-const jwt = require('jsonwebtoken');
 import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 
 const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
-  let token = req.headers["x-access-token"]
+  const token = req.headers['x-access-token'] as string;
   if (token) {
-    jwt.verify(token, process.env.JWT_SECRET, (err: any, decoded: any) => {
+    jwt.verify(token, process.env.JWT_SECRET as string, (err: any, decoded: any) => {
       if (err) {
                 
-        return res.status(404).json({
+        res.status(404).json({
           message: err,
-          err
+          err,
         });
-      } else {
-        res.locals.jwt = decoded;
-        next();
-      }
-  });
+        return;
+      } 
+      res.locals.jwt = decoded;
+      next();
+      
+    });
   } else {
-    return res.status(401).json({
-      message: 'Unauthorized'
+    res.status(401).json({
+      message: 'Unauthorized',
     });
   }
 };

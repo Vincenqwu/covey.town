@@ -2,12 +2,12 @@ import Express from 'express';
 import * as http from 'http';
 import CORS from 'cors';
 import { AddressInfo } from 'net';
-import addTownRoutes from './router/towns';
-import CoveyTownsStore from './lib/CoveyTownsStore';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-const userRoute = require("./router/users");
-var bodyParser = require('body-parser')
+import bodyParser from 'body-parser';
+import addTownRoutes from './router/towns';
+import CoveyTownsStore from './lib/CoveyTownsStore';
+import router from './router/users';
 
 
 dotenv.config();
@@ -15,7 +15,7 @@ dotenv.config();
 mongoose.connect(
   process.env.MONGO_URL!,
 ).then(() => {
-    console.log("Connected to MongoDB");
+  console.log('Connected to MongoDB');
 }).catch((err) => {
   console.log(err);
 });
@@ -23,14 +23,14 @@ mongoose.connect(
 const app = Express();
 app.use(CORS());
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 const server = http.createServer(app);
 
-app.use('/users', userRoute);
+app.use('/users', router);
 addTownRoutes(server, app);
 
 server.listen(process.env.PORT || 8081, () => {
