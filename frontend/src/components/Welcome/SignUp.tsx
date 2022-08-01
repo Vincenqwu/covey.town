@@ -5,6 +5,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center"
   },
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(2, 6),
     display: "flex",
     flexDirection: "column",
     alignItems: "center"
@@ -61,7 +62,8 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(1),
+    padding: theme.spacing(3)
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
@@ -73,8 +75,18 @@ export default function SignUp() {
 
   return (
     <Grid container component="main" className={classes.root}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
+      {/* <Container component="main" maxWidth="xs"> */}
+      <CssBaseline />
+      <Grid
+        className={classes.size}
+        item
+        xs={12}
+        sm={10}
+        md={5}
+        component={Paper}
+        elevation={1}
+        square
+      >
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
@@ -84,7 +96,7 @@ export default function SignUp() {
           </Typography>
           <form className={classes.form} noValidate>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} justify-content = "center">
                 <TextField
                   autoComplete="fname"
                   name="firstName"
@@ -107,7 +119,7 @@ export default function SignUp() {
                   autoComplete="lname"
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12}  justify-content = "center">
                 <TextField
                   variant="outlined"
                   required
@@ -130,12 +142,12 @@ export default function SignUp() {
                   autoComplete="current-password"
                 />
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
                   label="I want to receive inspiration, marketing promotions and updates via email."
                 />
-              </Grid>
+              </Grid> */}
             </Grid>
             <Button
               type="submit"
@@ -143,22 +155,24 @@ export default function SignUp() {
               variant="contained"
               color="primary"
               className={classes.submit}
+              // onClick = {handleSignup}
             >
               Sign Up
             </Button>
-            <Grid container justify="flex-end">
+            <Grid container >
               <Grid item>
                 <Link href="https://www.youtube.com/" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>
             </Grid>
+            <Box mt={5}>
+              <Copyright />
+            </Box>
           </form>
         </div>
-        <Box mt={5}>
-          <Copyright />
-        </Box>
-      </Container>
+        </Grid>
+      {/* </Container> */}
     </Grid>
   );
 }

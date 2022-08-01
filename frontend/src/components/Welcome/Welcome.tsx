@@ -115,7 +115,7 @@ export default function SignInSide(props: { history: string[]; }) {
         className={classes.size}
         item
         xs={12}
-        sm={8}
+        sm={10}
         md={5}
         component={Paper}
         elevation={1}
@@ -169,7 +169,7 @@ export default function SignInSide(props: { history: string[]; }) {
             <Grid container>
               <Grid item>
                 <Link href="https://www.youtube.com/" variant="body2">
-                  Do not have an account? Sign Up
+                  Don&apos;t have an account? Sign Up
                 </Link>
               </Grid>
             </Grid>
