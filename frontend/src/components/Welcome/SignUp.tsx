@@ -3,8 +3,8 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
+// import FormControlLabel from "@material-ui/core/FormControlLabel";
+// import Checkbox from "@material-ui/core/Checkbox";
 import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
@@ -12,15 +12,15 @@ import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
+// import Container from "@material-ui/core/Container";
 import image from "./Images/image.jpg";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="https://github.com/Vincenqwu/covey.town">
+        Github CoveyTown by Qiuan, Tong, Yingying
       </Link>{" "}
       {new Date().getFullYear()}
       .
@@ -96,30 +96,19 @@ export default function SignUp() {
           </Typography>
           <form className={classes.form} noValidate>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6} justify-content = "center">
+              <Grid item xs={12} justify-content = "center">
                 <TextField
                   autoComplete="fname"
-                  name="firstName"
+                  name="userName"
                   variant="outlined"
                   required
                   fullWidth
-                  id="firstName"
-                  label="First Name"
+                  id="userName"
+                  label="Username"
                   autoFocus
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="lname"
-                />
-              </Grid>
-              <Grid item xs={12}  justify-content = "center">
+              <Grid item xs={12} justify-content = "center">
                 <TextField
                   variant="outlined"
                   required

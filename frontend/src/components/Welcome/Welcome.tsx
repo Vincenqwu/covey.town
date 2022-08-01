@@ -22,8 +22,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/"> 
-        Your Website
+      <Link color="inherit" href="https://github.com/Vincenqwu/covey.town"> 
+      Github CoveyTown by Qiuan, Tong, Yingying
       </Link>{" "}
       {`${new Date().getFullYear()}.`}
     </Typography>
