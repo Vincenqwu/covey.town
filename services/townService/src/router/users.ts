@@ -1,10 +1,10 @@
-import { Router } from 'express';
+import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/user';
 import verifyJWT from '../middleware/verifyJWT';
 
-const userRouter:Router = Router();
+const userRouter:express.Router = express.Router();
 
 // validate user is logged in/authenticated
 userRouter.get('/validate', verifyJWT, (_, res) => res.status(200).json({

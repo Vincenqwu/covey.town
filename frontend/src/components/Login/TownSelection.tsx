@@ -29,7 +29,7 @@ interface TownSelectionProps {
 }
 
 export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Element {
-  const [userName, setUserName] = useState<string>(Video.instance()?.userName || '');
+  const [userName, setNickName] = useState<string>(Video.instance()?.userName || '');
   const [newTownName, setNewTownName] = useState<string>('');
   const [newTownIsPublic, setNewTownIsPublic] = useState<boolean>(true);
   const [townIDToJoin, setTownIDToJoin] = useState<string>('');
@@ -60,7 +60,7 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
       if (!userName || userName.length === 0) {
         toast({
           title: 'Unable to join town',
-          description: 'Please select a username',
+          description: 'Please select a nickname',
           status: 'error',
         });
         return;
@@ -93,7 +93,7 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
     if (!userName || userName.length === 0) {
       toast({
         title: 'Unable to create town',
-        description: 'Please select a username before creating a town',
+        description: 'Please select a nickname before creating a town',
         status: 'error',
       });
       return;
@@ -141,13 +141,13 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
       <form>
         <Stack>
           <Box p="4" borderWidth="1px" borderRadius="lg">
-            <Heading as="h2" size="lg">Select a username</Heading>
+            <Heading as="h2" size="lg">Select a nickname</Heading>
 
             <FormControl>
               <FormLabel htmlFor="name">Name</FormLabel>
               <Input autoFocus name="name" placeholder="Your name"
                      value={userName}
-                     onChange={event => setUserName(event.target.value)}
+                     onChange={event => setNickName(event.target.value)}
               />
             </FormControl>
           </Box>
