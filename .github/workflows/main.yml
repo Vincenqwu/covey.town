@@ -29,7 +29,7 @@ jobs:
           TWILIO_API_KEY_SID: ${{ secrets.TWILIO_API_KEY_SID }}
           MONGO_URL: ${{ secrets.MONGO_URL }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        run: cd services/townService; npm install && npm version library_name && npm run lint && npm test
+        run: cd services/townService; npm install && npm run lint && npm test
 
       - name: Build and test frontend components
         run: cd frontend; npm install && npm run lint && npm test
