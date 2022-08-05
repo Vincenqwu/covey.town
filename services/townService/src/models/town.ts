@@ -5,10 +5,10 @@ const TownSchema: Schema = new Schema(
   {
     coveyTownId: { type: String, required: true, max: 20, unique: true },
     userId: { type: String, required: true },
-    townUpdatePassword: { type: String, required: true, max: 20 },
+    townUpdatePassword: { type: String, required: true },
     isPublic: { type: Boolean, required: true },
-    friendlyName: { type: String, required: true, max: 10 },
-    capacity: { type: Number, required: true, max: 20 },
+    friendlyName: { type: String, required: true },
+    capacity: { type: Number, required: true },
   },
   {
     timestamps: true,
