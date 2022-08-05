@@ -1,10 +1,11 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import User from '../models/user';
+import Town from '../models/town';
 import verifyJWT from '../middleware/verifyJWT';
+import signJWT from '../middleware/signJWT';
 
-const userRouter:express.Router = express.Router();
+const userRouter: express.Router = express.Router();
 
 // validate user is logged in/authenticated
 userRouter.get('/validate', verifyJWT, (_, res) => res.status(200).json({
@@ -26,7 +27,12 @@ userRouter.post('/register', async (req, res) => {
 
     // save user and respond
     const user = await newUser.save();
-    res.status(200).json(user);
+    const token = signJWT(user.username);
+    res.status(200).json({
+      message: 'Registration successful',
+      token,
+      user,
+    });
   } catch (err) {
     res.status(500).json(err);
   }
@@ -35,8 +41,8 @@ userRouter.post('/register', async (req, res) => {
 // user login
 userRouter.post('/login', async (req, res) => {
   try {
-    const user = await User.findOne({ 
-      username: req.body.username, 
+    const user = await User.findOne({
+      username: req.body.username,
     });
     if (!user) {
       res.status(404).json('user not found');
@@ -49,12 +55,13 @@ userRouter.post('/login', async (req, res) => {
     }
 
     // sign jwt token
-    const id = user.username;
-    const token = jwt.sign({ id }, process.env.JWT_SECRET as string, {
-      algorithm: 'HS256',
-      expiresIn: '10h', // will be expired after 10 hours
-    });
+    // const id = user.username;
+    // const token = jwt.sign({ id }, process.env.JWT_SECRET as string, {
+    //   algorithm: 'HS256',
+    //   expiresIn: '10h', // will be expired after 10 hours
+    // });
 
+    const token = signJWT(user.username);
     res.status(200).json({
       message: 'Auth successful',
       token,
@@ -65,18 +72,51 @@ userRouter.post('/login', async (req, res) => {
   }
 });
 
+// delete a user's account by username
+userRouter.delete('/:username', verifyJWT, async (req, res) => {
+  try {
+    const user = await User.findOne({
+      username: req.params.username,
+    });
+    if (user) {
+      await Town.deleteMany({
+        userId: user._id,
+      })
+      await User.deleteOne({
+        _id: user._id,
+      })
+    }
+    res.status(200).json({
+      message: 'User deleted',
+      username: req.params.username,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 // get a user's info by username
 userRouter.get('/:username', verifyJWT, async (req, res) => {
   try {
-    const user = await User.findOne({ 
-      username: req.params.username, 
+    const user = await User.findOne({
+      username: req.params.username,
     });
-    console.log(user);
     if (!user) {
-      res.status(401).json('user not found');
+      res.status(404).json('user not found');
       return;
     }
     res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+
+// get all the towns created by the user by user id
+userRouter.get('/:id/towns', verifyJWT, async (req, res) => {
+  try {
+    const towns = await Town.find({ userId: req.params.id });
+    res.status(200).json(towns);
   } catch (err) {
     res.status(500).json(err);
   }

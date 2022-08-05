@@ -1,7 +1,8 @@
-import express, { Express } from 'express';
+import { Express } from 'express';
 import io from 'socket.io';
 import { Server } from 'http';
 import { StatusCodes } from 'http-status-codes';
+import mongoose from 'mongoose';
 import {
   conversationAreaCreateHandler,
   townCreateHandler, townDeleteHandler,
@@ -11,12 +12,16 @@ import {
   townUpdateHandler,
 } from '../requestHandlers/CoveyTownRequestHandlers';
 import { logError } from '../Utils';
+import verifyJWT from '../middleware/verifyJWT';
+import Town from '../models/town';
+import User from '../models/user';
+
 
 export default function addTownRoutes(http: Server, app: Express): io.Server {
   /*
    * Create a new session (aka join a town)
    */
-  app.post('/sessions', express.json(), async (req, res) => {
+  app.post('/sessions', verifyJWT, async (req, res) => {
     try {
       const result = await townJoinHandler({
         userName: req.body.userName,
@@ -36,12 +41,18 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
   /**
    * Delete a town
    */
-  app.delete('/towns/:townID/:townPassword', express.json(), async (req, res) => {
+  app.delete('/towns/:townID/:townPassword', verifyJWT, async (req, res) => {
     try {
       const result = townDeleteHandler({
         coveyTownID: req.params.townID,
         coveyTownPassword: req.params.townPassword,
       });
+
+      // Delete database if townDeleteHandler is successful
+      if (result.isOK) {
+        await Town.deleteOne(
+          { coveyTownId: req.params.townID });
+      }
       res.status(200)
         .json(result);
     } catch (err) {
@@ -56,7 +67,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
   /**
    * List all towns
    */
-  app.get('/towns', express.json(), async (_req, res) => {
+  app.get('/towns', verifyJWT, async (_req, res) => {
     try {
       const result = townListHandler();
       res.status(StatusCodes.OK)
@@ -73,11 +84,35 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
   /**
    * Create a town
    */
-  app.post('/towns', express.json(), async (req, res) => {
+  app.post('/towns', verifyJWT, async (req, res) => {
     try {
-      const result = townCreateHandler(req.body);
-      res.status(StatusCodes.OK)
-        .json(result);
+      // if userId exists, create a new town
+      if (mongoose.Types.ObjectId.isValid(req.body.userId)) {
+        const user = await User.findById(req.body.userId);
+        if (user) {
+          const result = townCreateHandler(req.body);
+          // assign the newly created town with user id
+          const newTown = new Town({
+            coveyTownId: result.response?.coveyTownID,
+            userId: req.body.userId,
+            townUpdatePassword: result.response?.coveyTownPassword,
+            isPublic: req.body.isPubliclyListed,
+            friendlyName: req.body.friendlyName,
+            capacity: 20,
+          });
+          // save town and respond
+          const town = await newTown.save();
+          res.status(StatusCodes.OK)
+            .json(town);
+        }
+        else {
+          res.status(404).json('Cannot create town because user not found');
+        }
+      }
+      else {
+        res.status(404).json('User id is invalid');
+      }
+      
     } catch (err) {
       logError(err);
       res.status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -89,7 +124,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
   /**
    * Update a town
    */
-  app.patch('/towns/:townID', express.json(), async (req, res) => {
+  app.patch('/towns/:townID', verifyJWT, async (req, res) => {
     try {
       const result = townUpdateHandler({
         coveyTownID: req.params.townID,
@@ -97,6 +132,19 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
         friendlyName: req.body.friendlyName,
         coveyTownPassword: req.body.coveyTownPassword,
       });
+
+      // Update database if townUpdateHandler is successful
+      if (result.isOK) {
+        await Town.updateOne(
+          { coveyTownId: req.params.townID },
+          {
+            $set: {
+              townUpdatePassword: req.body.coveyTownPassword,
+              isPublic: req.body.isPubliclyListed,
+              friendlyName: req.body.friendlyName,
+            },
+          });
+      }
       res.status(StatusCodes.OK)
         .json(result);
     } catch (err) {
@@ -108,7 +156,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
     }
   });
 
-  app.post('/towns/:townID/conversationAreas', express.json(), async (req, res) => {
+  app.post('/towns/:townID/conversationAreas', verifyJWT, async (req, res) => {
     try {
       const result = conversationAreaCreateHandler({
         coveyTownID: req.params.townID,

@@ -8,6 +8,7 @@ import bodyParser from 'body-parser';
 import addTownRoutes from './router/towns';
 import CoveyTownsStore from './lib/CoveyTownsStore';
 import router from './router/users';
+import loadTownsFromDB from './townsLoader';
 
 
 dotenv.config();
@@ -16,6 +17,7 @@ mongoose.connect(
   process.env.MONGO_URL!,
 ).then(() => {
   console.log('Connected to MongoDB');
+  loadTownsFromDB();
 }).catch((err) => {
   console.log(err);
 });
