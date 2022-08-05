@@ -48,11 +48,32 @@ export interface TownCreateRequest {
 }
 
 /**
+ * Payload sent by client to extract existing town from DB and create the instances locally
+ */
+export interface TownExtractRequest {
+  coveyTownID: string;
+  coveyTownPassword: string;
+  friendlyName: string;
+  isPubliclyListed: boolean;
+}
+
+
+/**
  * Response from the server for a Town create request
  */
 export interface TownCreateResponse {
   coveyTownID: string;
   coveyTownPassword: string;
+}
+
+/**
+ * Response from the server for a Town extract request
+ */
+export interface TownExtractResponse {
+  coveyTownID: string;
+  coveyTownPassword: string;
+  friendlyName: string;
+  isPubliclyListed: boolean;
 }
 
 /**
@@ -151,6 +172,41 @@ export function townCreateHandler(requestData: TownCreateRequest): ResponseEnvel
     },
   };
 }
+
+export function townExtractHandler(requestData: TownExtractRequest): ResponseEnvelope<TownExtractResponse> {
+  const townsStore = CoveyTownsStore.getInstance();
+  if (!requestData.coveyTownID) {
+    return {
+      isOK: false,
+      message: 'Town ID must be specified',
+    };
+  }
+  if (!requestData.coveyTownPassword) {
+    return {
+      isOK: false,
+      message: 'Town Password must be specified',
+    };
+  }
+  if (requestData.friendlyName.length === 0) {
+    return {
+      isOK: false,
+      message: 'FriendlyName must be specified',
+    };
+  }
+  const extractedTown = townsStore.createTown(requestData.friendlyName, requestData.isPubliclyListed,
+    requestData.coveyTownID, requestData.coveyTownPassword);
+  // console.log(extractedTown);
+  return {
+    isOK: true,
+    response: {
+      coveyTownID: extractedTown.coveyTownID,
+      coveyTownPassword: extractedTown.townUpdatePassword,
+      friendlyName: extractedTown.friendlyName,
+      isPubliclyListed: extractedTown.isPubliclyListed,
+    },
+  };
+}
+
 
 export function townDeleteHandler(requestData: TownDeleteRequest): ResponseEnvelope<Record<string, null>> {
   const townsStore = CoveyTownsStore.getInstance();
