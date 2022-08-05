@@ -81,10 +81,10 @@ userRouter.delete('/:username', verifyJWT, async (req, res) => {
     if (user) {
       await Town.deleteMany({
         userId: user._id,
-      })
+      });
       await User.deleteOne({
         _id: user._id,
-      })
+      });
     }
     res.status(200).json({
       message: 'User deleted',

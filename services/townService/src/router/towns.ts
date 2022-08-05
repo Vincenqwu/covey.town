@@ -104,12 +104,10 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
           const town = await newTown.save();
           res.status(StatusCodes.OK)
             .json(town);
-        }
-        else {
+        } else {
           res.status(404).json('Cannot create town because user not found');
         }
-      }
-      else {
+      } else {
         res.status(404).json('User id is invalid');
       }
       

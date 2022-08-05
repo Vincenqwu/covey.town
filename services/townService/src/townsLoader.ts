@@ -10,8 +10,8 @@ export default async function loadTownsFromDB() {
       coveyTownID: town.coveyTownId,
       coveyTownPassword: town.townUpdatePassword,
       friendlyName: town.friendlyName,
-      isPubliclyListed: town.isPublic
-    }
+      isPubliclyListed: town.isPublic,
+    };
     townExtractHandler(request);
   }
 }
