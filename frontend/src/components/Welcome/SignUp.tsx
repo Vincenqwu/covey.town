@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -13,6 +13,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 // import Container from "@material-ui/core/Container";
+import axios from './api/axios';
 import image from "./Images/image.jpg";
 
 function Copyright() {
@@ -70,8 +71,96 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
+const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$/;
+const REGISTER_URL = '/users/register';
+
 export default function SignUp() {
   const classes = useStyles();
+
+  const [user, setUser] = useState('');
+	const [validName, setValidName] = useState(false);
+	const [userFocus, setUserFocus] = useState(false);
+
+  const [email, setEmail] = useState('');
+	const [validEmail, setValidEmail] = useState(false);
+	const [emailFocus, setEmailFocus] = useState(false);
+
+	const [pwd, setPwd] = useState('');
+	const [validPwd, setValidPwd] = useState(false);
+	const [pwdFocus, setPwdFocus] = useState(false);
+
+	const [matchPwd, setMatchPwd] = useState('');
+	const [validMatch, setValidMatch] = useState(false);
+	const [matchFocus, setMatchFocus] = useState(false);
+
+	const [errMsg, setErrMsg] = useState('');
+	const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+		setValidName(USER_REGEX.test(user));
+	}, [user]);
+
+  useEffect(() => {
+		setValidName(EMAIL_REGEX.test(email));
+	}, [email]);
+
+	useEffect(() => {
+		setValidPwd(PWD_REGEX.test(pwd));
+		setValidMatch(pwd === matchPwd);
+	}, [pwd, matchPwd]);
+
+	useEffect(() => {
+		setErrMsg('');
+	}, [user, pwd, matchPwd]);
+
+  const handleSignup = async(e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+
+    console.log(user);
+    console.log(email);
+    console.log(pwd);
+
+
+    // const v1 = USER_REGEX.test(user);
+    // const v2 = EMAIL_REGEX.test(email);
+		// const v3 = PWD_REGEX.test(pwd);
+		// if (!v1 || !v2 || !v3) {
+		// 	setErrMsg('Invalid Entry');
+		// 	return;
+		// }
+
+    const username = user;
+    const password = pwd;
+
+    try {
+			const response = await axios.post(
+				REGISTER_URL,
+				JSON.stringify({ username, password, email}),
+				{
+					headers: { 'Content-Type': 'application/json' },
+				}
+			);
+			// TODO: remove console.logs before deployment
+			console.log(JSON.stringify(response?.data));
+			setSuccess(true);
+			// clear state and controlled inputs
+			setUser('');
+			setPwd('');
+			setMatchPwd('');
+		} catch (err) {
+			// if (!err?.response) {
+			// 	setErrMsg('No Server Response');
+			// } else if (err.response?.status === 409) {
+			// 	setErrMsg('Username Taken');
+			// } else {
+			// 	setErrMsg('Registration Failed');
+			// }
+			// errRef.current.focus();
+		}
+  }
+
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -106,6 +195,7 @@ export default function SignUp() {
                   id="userName"
                   label="Username"
                   autoFocus
+                  onChange={(e) => setUser(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} justify-content = "center">
@@ -117,6 +207,7 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -129,6 +220,7 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="current-password"
+                  onChange={(e) => setPwd(e.target.value)}
                 />
               </Grid>
               {/* <Grid item xs={12}>
@@ -144,7 +236,7 @@ export default function SignUp() {
               variant="contained"
               color="primary"
               className={classes.submit}
-              // onClick = {handleSignup}
+              onClick = {handleSignup}
             >
               Sign Up
             </Button>
