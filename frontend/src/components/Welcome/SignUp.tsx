@@ -15,6 +15,10 @@ import { makeStyles } from "@material-ui/core/styles";
 // import Container from "@material-ui/core/Container";
 import axios from './api/axios';
 import image from "./Images/image.jpg";
+import Login from "../Login/Login";
+import { TownJoinResponse } from "../../classes/TownsServiceClient";
+import SignIn from "./SignIn";
+import App from "../../App";
 
 function Copyright() {
   return (
@@ -73,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const EMAIL_REGEX = /^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$/;
+const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const REGISTER_URL = '/users/register';
 
 export default function SignUp() {
@@ -102,8 +106,9 @@ export default function SignUp() {
 		setValidName(USER_REGEX.test(user));
 	}, [user]);
 
+  console.log(validName);
   useEffect(() => {
-		setValidName(EMAIL_REGEX.test(email));
+		setValidEmail(EMAIL_REGEX.test(email));
 	}, [email]);
 
 	useEffect(() => {
@@ -130,6 +135,7 @@ export default function SignUp() {
 		// 	setErrMsg('Invalid Entry');
 		// 	return;
 		// }
+    
 
     const username = user;
     const password = pwd;
@@ -143,27 +149,33 @@ export default function SignUp() {
 				}
 			);
 			// TODO: remove console.logs before deployment
-			console.log(JSON.stringify(response?.data));
+			console.log(JSON.stringify(response?.status));
 			setSuccess(true);
 			// clear state and controlled inputs
 			setUser('');
 			setPwd('');
 			setMatchPwd('');
 		} catch (err) {
-			// if (!err?.response) {
-			// 	setErrMsg('No Server Response');
-			// } else if (err.response?.status === 409) {
-			// 	setErrMsg('Username Taken');
-			// } else {
-			// 	setErrMsg('Registration Failed');
-			// }
+			if (!err) {
+				setErrMsg('No Server Response');
+			} else if (err === 500) {
+				setErrMsg('Internal Server Error');
+			} else {
+				setErrMsg('Registration Failed');
+			}
 			// errRef.current.focus();
+      
+      console.log(err);
 		}
   }
 
 
   return (
-    <Grid container component="main" className={classes.root}>
+    <>
+      {success ? (
+        <SignIn history={[]} />
+      ) : (
+      <Grid container component="main" className={classes.root}>
       {/* <Container component="main" maxWidth="xs"> */}
       <CssBaseline />
       <Grid
@@ -177,6 +189,13 @@ export default function SignUp() {
         square
       >
         <div className={classes.paper}>
+          <p
+						// ref={errRef}
+						className={errMsg ? 'errmsg' : 'offscreen'}
+						aria-live="assertive"
+					>
+						{errMsg}
+					</p>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
@@ -195,8 +214,19 @@ export default function SignUp() {
                   id="userName"
                   label="Username"
                   autoFocus
+                  aria-invalid={validName ? 'false' : 'true'}
+                  aria-describedby="uidnote"
                   onChange={(e) => setUser(e.target.value)}
                 />
+                
+                {(user !== '' && !validName) && 
+                <h4>
+                  4 to 24 characters.
+                  <br />
+                  Must begin with a letter.
+                  <br />
+                  Letters, numbers, underscores, hyphens allowed.
+						    </h4>}
               </Grid>
               <Grid item xs={12} justify-content = "center">
                 <TextField
@@ -209,6 +239,10 @@ export default function SignUp() {
                   autoComplete="email"
                   onChange={(e) => setEmail(e.target.value)}
                 />
+                {(email !== '' && !validEmail) && 
+                <h4>
+                  Need a valid email.
+						    </h4>}
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -222,6 +256,20 @@ export default function SignUp() {
                   autoComplete="current-password"
                   onChange={(e) => setPwd(e.target.value)}
                 />
+                {(pwd !== '' && !validPwd) && 
+                <h4>
+                  8 to 24 characters.
+                  <br />
+                  Must include uppercase and lowercase letters, a number and a
+                  special character.
+                  <br />
+                  Allowed special characters:{' '}
+                  <span aria-label="exclamation mark">!</span>{' '}
+                  <span aria-label="at symbol">@</span>{' '}
+                  <span aria-label="hashtag">#</span>{' '}
+                  <span aria-label="dollar sign">$</span>{' '}
+                  <span aria-label="percent">%</span>
+						    </h4>}
               </Grid>
               {/* <Grid item xs={12}>
                 <FormControlLabel
@@ -255,5 +303,7 @@ export default function SignUp() {
         </Grid>
       {/* </Container> */}
     </Grid>
-  );
+    )};
+    </>
+    )
 }
