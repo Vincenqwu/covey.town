@@ -128,13 +128,13 @@ export default function SignUp() {
     console.log(pwd);
 
 
-    // const v1 = USER_REGEX.test(user);
-    // const v2 = EMAIL_REGEX.test(email);
-		// const v3 = PWD_REGEX.test(pwd);
-		// if (!v1 || !v2 || !v3) {
-		// 	setErrMsg('Invalid Entry');
-		// 	return;
-		// }
+    const v1 = USER_REGEX.test(user);
+    const v2 = EMAIL_REGEX.test(email);
+		const v3 = PWD_REGEX.test(pwd);
+		if (!v1 || !v2 || !v3) {
+			setErrMsg('Invalid Entry');
+			return;
+		}
     
 
     const username = user;
