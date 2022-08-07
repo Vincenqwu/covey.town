@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -14,7 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import image from "./Images/image.jpg";
 import axios from './api/axios';
-import authService from "./service/authService";
+// import authService from "./service/authService";
 
 const LOGIN_URL = '/users/login';
  
@@ -91,10 +91,6 @@ export default function SignIn() {
       e.preventDefault();
         // 调用api，返回信息，是否登陆成功，一个json，name，local jwt token，
 
-      console.log("...............")
-      console.log(user);
-      console.log(pwd);
-
       const username = user;
       const password = pwd;
 
@@ -109,9 +105,11 @@ export default function SignIn() {
         setUser('');
 			  setPwd('');
         setSuccess(true);
-        console.log(response);
+        // console.log(response);
       } catch (err) {
-          console.log(err);
+        setErrMsg('Login Failed');
+        
+        // console.log(err);
       }
 
   };
@@ -126,6 +124,7 @@ export default function SignIn() {
 					<p><a href="/welcome">Welcome to CoveyTown</a></p>
 				</section>
         ) : (
+          
           <Grid container component="main" className={classes.root}>
             <CssBaseline />
             {/* <Grid item xs={false} sm={4} md={7} className={classes.image} /> */}
@@ -140,6 +139,18 @@ export default function SignIn() {
               square
             >
               <div className={classes.paper}>
+                <p
+                  style = {{
+                    fontSize: '1.2rem',
+                    color: 'white',
+                    backgroundColor: 'red',
+      
+                  }}
+                  // className={errMsg ? 'errmsg' : 'offscreen'}
+                  aria-live="assertive"
+                >
+                  {errMsg}
+                </p>
                 <Avatar className={classes.avatar}>
                   <LockOutlinedIcon />
                 </Avatar>

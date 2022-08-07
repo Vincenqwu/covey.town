@@ -1,5 +1,3 @@
-import React from "react";
-
 import image1 from "./image1.jpg";
 import image from "./image.jpg";
 

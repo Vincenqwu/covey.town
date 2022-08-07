@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -15,8 +15,6 @@ import { makeStyles } from "@material-ui/core/styles";
 // import Container from "@material-ui/core/Container";
 import axios from './api/axios';
 import image from "./Images/image.jpg";
-import Login from "../Login/Login";
-import { TownJoinResponse } from "../../classes/TownsServiceClient";
 import SignIn from "./SignIn";
 
 function Copyright() {
@@ -71,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
-  }
+  },
 }));
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
@@ -84,19 +82,12 @@ export default function SignUp() {
   
   const [user, setUser] = useState('');
 	const [validName, setValidName] = useState(false);
-	const [userFocus, setUserFocus] = useState(false);
 
   const [email, setEmail] = useState('');
 	const [validEmail, setValidEmail] = useState(false);
-	const [emailFocus, setEmailFocus] = useState(false);
 
 	const [pwd, setPwd] = useState('');
 	const [validPwd, setValidPwd] = useState(false);
-	const [pwdFocus, setPwdFocus] = useState(false);
-
-	const [matchPwd, setMatchPwd] = useState('');
-	const [validMatch, setValidMatch] = useState(false);
-	const [matchFocus, setMatchFocus] = useState(false);
 
 	const [errMsg, setErrMsg] = useState('');
 	const [success, setSuccess] = useState(false);
@@ -105,26 +96,24 @@ export default function SignUp() {
 		setValidName(USER_REGEX.test(user));
 	}, [user]);
 
-  console.log(validName);
   useEffect(() => {
 		setValidEmail(EMAIL_REGEX.test(email));
 	}, [email]);
 
 	useEffect(() => {
 		setValidPwd(PWD_REGEX.test(pwd));
-		setValidMatch(pwd === matchPwd);
-	}, [pwd, matchPwd]);
+	}, [pwd]);
 
 	useEffect(() => {
 		setErrMsg('');
-	}, [user, pwd, matchPwd]);
+	}, [user, pwd]);
 
   const handleSignup = async(e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
-    console.log(user);
-    console.log(email);
-    console.log(pwd);
+    // console.log(user);
+    // console.log(email);
+    // console.log(pwd);
 
 
     const v1 = USER_REGEX.test(user);
@@ -148,12 +137,11 @@ export default function SignUp() {
 				}
 			);
 			// TODO: remove console.logs before deployment
-			console.log(JSON.stringify(response?.status));
+			// console.log(JSON.stringify(response?.status));
 			setSuccess(true);
 			// clear state and controlled inputs
 			setUser('');
 			setPwd('');
-			setMatchPwd('');
 		} catch (err) {
 			if (!err) {
 				setErrMsg('No Server Response');
@@ -164,7 +152,7 @@ export default function SignUp() {
 			}
 			// errRef.current.focus();
       
-      console.log(err);
+      // console.log(err);
 		}
   }
 
@@ -190,10 +178,16 @@ export default function SignUp() {
         <div className={classes.paper}>
           <p
 						// ref={errRef}
-						className={errMsg ? 'errmsg' : 'offscreen'}
-						aria-live="assertive"
+            style = {{
+              fontSize: '1.2rem',
+              color: 'white',
+              backgroundColor: 'red',
+
+            }}
+						// className={errMsg ? 'errmsg' : 'offscreen'}
+						// aria-live="assertive"
 					>
-						{errMsg}
+					    {errMsg}   
 					</p>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
