@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -18,7 +18,6 @@ import image from "./Images/image.jpg";
 import Login from "../Login/Login";
 import { TownJoinResponse } from "../../classes/TownsServiceClient";
 import SignIn from "./SignIn";
-import App from "../../App";
 
 function Copyright() {
   return (
@@ -82,7 +81,7 @@ const REGISTER_URL = '/users/register';
 
 export default function SignUp() {
   const classes = useStyles();
-
+  
   const [user, setUser] = useState('');
 	const [validName, setValidName] = useState(false);
 	const [userFocus, setUserFocus] = useState(false);
@@ -173,7 +172,7 @@ export default function SignUp() {
   return (
     <>
       {success ? (
-        <SignIn history={[]} />
+        <SignIn />
       ) : (
       <Grid container component="main" className={classes.root}>
       {/* <Container component="main" maxWidth="xs"> */}

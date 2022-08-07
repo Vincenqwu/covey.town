@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -12,12 +12,12 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-// import { AnyAaaaRecord } from "dns";
-import users from "./useData/users";
 import image from "./Images/image.jpg";
+import axios from './api/axios';
 import authService from "./service/authService";
 
-
+const LOGIN_URL = '/users/login';
+ 
 
 function Copyright() {
   return (
@@ -73,116 +73,134 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function SignIn(props: { history: string[]; }) {
 
-  if(authService.isLoggedIn()){
-    const {history} = props;
-    history.push("./home");
-
-  }
-
+export default function SignIn() {
   const classes = useStyles();
+  // const { setAuth } = useContext(AuthContext);
 
-  // console.log(typeof classes.root);
+  const [user, setUser] = useState('');
+  const [pwd, setPwd] = useState('');
+  const [errMsg, setErrMsg] = useState('');
+  const [success, setSuccess] = useState(false);
 
-  const [account, setAccount] = React.useState({username:"",password:""});
+  useEffect(() => {
+    setErrMsg('');
+  }, [user, pwd]);
 
-  const handelAccount = (property: "username" | "password", event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>{
-
-    const accountCopy = {...account};
-    accountCopy[property] = event.target.value;
-
-    setAccount(accountCopy);
-
-  }
-
-  const isVarifiedUser=(username: string, password: string)=> users.find((user: { username: string; password: string; })=> user.username === username && user.password === password);
-
-
-  const handelLogin = ()=>{
-      if(isVarifiedUser(account.username,account.password)){
-        authService.doLogIn(account.username);
-        setAccount({username:"",password:""});
-        const {history} = props;
-        history.push("./home");
+  const handelLogin = async(e: { preventDefault: () => void; })=>{
+      e.preventDefault();
         // 调用api，返回信息，是否登陆成功，一个json，name，local jwt token，
 
+      console.log("...............")
+      console.log(user);
+      console.log(pwd);
 
+      const username = user;
+      const password = pwd;
+
+      try {
+        const response = await axios.post(
+          LOGIN_URL,
+          JSON.stringify({ username, password }),
+          {
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
+        setUser('');
+			  setPwd('');
+        setSuccess(true);
+        console.log(response);
+      } catch (err) {
+          console.log(err);
       }
+
   };
 
   return (
-    <Grid container component="main" className={classes.root}>
-      <CssBaseline />
-      {/* <Grid item xs={false} sm={4} md={7} className={classes.image} /> */}
-      <Grid
-        className={classes.size}
-        item
-        xs={12}
-        sm={10}
-        md={5}
-        component={Paper}
-        elevation={1}
-        square
-      >
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <form className={classes.form} noValidate>
-            <TextField
-            onChange={(event)=>handelAccount("username",event)}
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              autoFocus
-            />
-            <TextField
-            onChange={(event)=>handelAccount("password",event)}
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick = {handelLogin}
+    <>
+      {
+        success? (
+          <section>
+					<h1>You are logged in!</h1>
+					<br />
+					<p><a href="/welcome">Welcome to CoveyTown</a></p>
+				</section>
+        ) : (
+          <Grid container component="main" className={classes.root}>
+            <CssBaseline />
+            {/* <Grid item xs={false} sm={4} md={7} className={classes.image} /> */}
+            <Grid
+              className={classes.size}
+              item
+              xs={12}
+              sm={10}
+              md={5}
+              component={Paper}
+              elevation={1}
+              square
             >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item>
-                <Link href="/signup" variant="body2">
-                  Don&apos;t have an account? Sign Up
-                </Link>
-              </Grid>
+              <div className={classes.paper}>
+                <Avatar className={classes.avatar}>
+                  <LockOutlinedIcon />
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                  Sign in
+                </Typography>
+                <form className={classes.form} noValidate>
+                  <TextField
+                    onChange={(e) => setUser(e.target.value)}
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="username"
+                    label="Username"
+                    name="username"
+                    autoFocus
+                  />
+                  <TextField
+                    onChange={(e) => setPwd(e.target.value)}
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                  />
+                  <FormControlLabel
+                    control={<Checkbox value="remember" color="primary" />}
+                    label="Remember me"
+                  />
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                    onClick = {handelLogin}
+                  >
+                    Sign In
+                  </Button>
+                  <Grid container>
+                    <Grid item>
+                      <Link href="/signup" variant="body2">
+                        Don&apos;t have an account? Sign Up
+                      </Link>
+                    </Grid>
+                  </Grid>
+                  <Box mt={5}>
+                    <Copyright />
+                  </Box>
+                </form>
+              </div>
             </Grid>
-            <Box mt={5}>
-              <Copyright />
-            </Box>
-          </form>
-        </div>
-      </Grid>
-    </Grid>
+          </Grid>
+        )
+      }
+    
+    </>
   );
 }

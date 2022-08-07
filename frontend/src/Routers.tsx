@@ -11,7 +11,7 @@ export default function Routers(){
             <Route exact path="/" component={SignIn} />
             <Route path="/signin" component={SignIn} />
             <Route path="/signup" component={SignUp} />
-            <Route path="/login" component={App} />
+            <Route path="/welcome" component={App} />
         </Switch>
     )
 }
