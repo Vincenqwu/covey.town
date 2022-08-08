@@ -3,8 +3,6 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-// import FormControlLabel from "@material-ui/core/FormControlLabel";
-// import Checkbox from "@material-ui/core/Checkbox";
 import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
@@ -12,11 +10,14 @@ import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-// import Container from "@material-ui/core/Container";
 import axios from './api/axios';
 import image from "./Images/image.jpg";
 import SignIn from "./SignIn";
 
+/**
+ * This is the Copyright component
+ * @returns a html
+ */
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -30,6 +31,9 @@ function Copyright() {
   );
 }
 
+/**
+ * This is the html formatting.
+ */
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "100vh",
@@ -63,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(1),
     padding: theme.spacing(3)
   },
@@ -77,6 +81,10 @@ const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const REGISTER_URL = '/users/register';
 
+/**
+ * This is the SignUp component. 
+ * @returns a html
+ */
 export default function SignUp() {
   const classes = useStyles();
   
@@ -111,11 +119,6 @@ export default function SignUp() {
   const handleSignup = async(e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
-    // console.log(user);
-    // console.log(email);
-    // console.log(pwd);
-
-
     const v1 = USER_REGEX.test(user);
     const v2 = EMAIL_REGEX.test(email);
 		const v3 = PWD_REGEX.test(pwd);
@@ -143,18 +146,17 @@ export default function SignUp() {
 			setUser('');
 			setPwd('');
 		} catch (err) {
-			if (!err) {
-				setErrMsg('No Server Response');
-			} else if (err === 500) {
-				setErrMsg('Internal Server Error');
-			} else {
+      if (err instanceof Error) {
+        if (err.message === "Request failed with status code 500") {
+          setErrMsg('Username or email is not unique');
+        }
+        else {
 				setErrMsg('Registration Failed');
-			}
-			// errRef.current.focus();
-      
-      // console.log(err);
-		}
-  }
+			} 
+		} else {
+      setErrMsg('Registration Failed');
+    }
+  }}
 
 
   return (
@@ -163,7 +165,6 @@ export default function SignUp() {
         <SignIn />
       ) : (
       <Grid container component="main" className={classes.root}>
-      {/* <Container component="main" maxWidth="xs"> */}
       <CssBaseline />
       <Grid
         className={classes.size}
@@ -177,15 +178,12 @@ export default function SignUp() {
       >
         <div className={classes.paper}>
           <p
-						// ref={errRef}
             style = {{
               fontSize: '1.2rem',
               color: 'white',
               backgroundColor: 'red',
 
             }}
-						// className={errMsg ? 'errmsg' : 'offscreen'}
-						// aria-live="assertive"
 					>
 					    {errMsg}   
 					</p>
@@ -264,12 +262,6 @@ export default function SignUp() {
                   <span aria-label="percent">%</span>
 						    </h4>}
               </Grid>
-              {/* <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid> */}
             </Grid>
             <Button
               type="submit"
@@ -294,7 +286,6 @@ export default function SignUp() {
           </form>
         </div>
         </Grid>
-      {/* </Container> */}
     </Grid>
     )};
     </>

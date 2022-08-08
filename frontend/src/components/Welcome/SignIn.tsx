@@ -14,7 +14,6 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import image from "./Images/image.jpg";
 import axios from './api/axios';
-// import authService from "./service/authService";
 
 const LOGIN_URL = '/users/login';
  
@@ -85,7 +84,6 @@ const useStyles = makeStyles((theme) => ({
  */
 export default function SignIn() {
   const classes = useStyles();
-  // const { setAuth } = useContext(AuthContext);
 
   const [user, setUser] = useState('');
   const [pwd, setPwd] = useState('');
@@ -134,7 +132,6 @@ export default function SignIn() {
    */
   const handelLogin = async(e: { preventDefault: () => void; })=>{
       e.preventDefault();
-        // 调用api，返回信息，是否登陆成功，一个json，name，local jwt token，
 
       const username = user;
       const password = pwd;
@@ -183,7 +180,6 @@ export default function SignIn() {
           
           <Grid container component="main" className={classes.root}>
             <CssBaseline />
-            {/* <Grid item xs={false} sm={4} md={7} className={classes.image} /> */}
             <Grid
               className={classes.size}
               item
@@ -200,9 +196,7 @@ export default function SignIn() {
                     fontSize: '1.2rem',
                     color: 'white',
                     backgroundColor: 'red',
-      
                   }}
-                  // className={errMsg ? 'errmsg' : 'offscreen'}
                   aria-live="assertive"
                 >
                   {errMsg}
