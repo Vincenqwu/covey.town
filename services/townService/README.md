@@ -240,7 +240,7 @@ Remove a user's account by username and all the towns created by the user
 }
 ```
 
-# Get a User's Info
+# Get User's Info
 
 Get user's profile information with username
 
@@ -318,3 +318,50 @@ get all the towns created by the user by user id
     }
 ]
 ```
+
+
+# Update User's Profile
+
+Update user's profile information: email and password
+
+**URL** : `/:username`
+
+**Method** : `PUT`
+
+**JWT Auth required** : YES
+
+**Parameter** : username
+
+**Data example** 
+
+Provide at least one of the data fields: password, email
+```json
+{
+    "password": "22222222",
+    "email": "v@gmail.com",
+}
+```
+
+## Success Response
+
+**Condition** : username exists and profile is updated successfully
+
+**Code** : `200`
+
+**Content example**
+```json
+profile has been updated
+```
+
+## Error Response
+
+**Condition** : username does not exist
+
+**Code** : `404`
+
+**Content** :
+
+```json
+user not found
+```
+

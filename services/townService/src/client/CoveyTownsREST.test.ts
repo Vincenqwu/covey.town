@@ -1,11 +1,18 @@
 import assert from 'assert';
 import CORS from 'cors';
-import Express from 'express';
+import Express, { Request, Response, NextFunction } from 'express';
 import http from 'http';
 import { nanoid } from 'nanoid';
 import { AddressInfo } from 'net';
 import addTownRoutes from '../router/towns';
 import TownsServiceClient, { TownListResponse } from './TownsServiceClient';
+import * as dbHandler from './db-handler';
+import User from '../models/user';
+
+
+jest.mock('../middleware/verifyJWT', () => jest.fn((_req: Request, _res: Response, next: NextFunction) => {
+  next();
+}));
 
 type TestTownData = {
   friendlyName: string;
@@ -30,6 +37,7 @@ describe('TownsServiceAPIREST', () => {
   let apiClient: TownsServiceClient;
 
   async function createTownForTesting(
+    userId: string,
     friendlyNameToUse?: string,
     isPublic = false,
   ): Promise<TestTownData> {
@@ -38,6 +46,7 @@ describe('TownsServiceAPIREST', () => {
         ? friendlyNameToUse
         : `${isPublic ? 'Public' : 'Private'}TestingTown=${nanoid()}`;
     const ret = await apiClient.createTown({
+      userId,
       friendlyName,
       isPubliclyListed: isPublic,
     });
@@ -49,7 +58,22 @@ describe('TownsServiceAPIREST', () => {
     };
   }
 
+  async function createUserForTesting(username: string, password: string, email: string): Promise<string> {
+    // create new user
+    const newUser = new User({
+      username,
+      email,
+      password,
+    });
+    await newUser.save();
+    const user = await User.find({});
+    const userId = user[0]._id.valueOf();
+    return userId;
+  }
+
   beforeAll(async () => {
+    await dbHandler.connect();
+    
     const app = Express();
     app.use(CORS());
     server = http.createServer(app);
@@ -60,13 +84,22 @@ describe('TownsServiceAPIREST', () => {
 
     apiClient = new TownsServiceClient(`http://127.0.0.1:${address.port}`);
   });
+  /**
+   * Clear all test data after every test.
+   */
+  afterEach(async () => {
+    User.deleteMany({});
+    await dbHandler.clearDatabase();
+  });
   afterAll(async () => {
+    await dbHandler.closeDatabase();
     await server.close();
   });
   describe('CoveyTownCreateAPI', () => {
     it('Allows for multiple towns with the same friendlyName', async () => {
-      const firstTown = await createTownForTesting();
-      const secondTown = await createTownForTesting(firstTown.friendlyName);
+      const userId = await createUserForTesting('testUser1', '111111111', 'test1@gmail.com');
+      const firstTown = await createTownForTesting(userId);
+      const secondTown = await createTownForTesting(userId, firstTown.friendlyName);
       expect(firstTown.coveyTownID).not.toBe(secondTown.coveyTownID);
     });
     it('Prohibits a blank friendlyName', async () => {
@@ -81,10 +114,11 @@ describe('TownsServiceAPIREST', () => {
 
   describe('CoveyTownListAPI', () => {
     it('Lists public towns, but not private towns', async () => {
-      const pubTown1 = await createTownForTesting(undefined, true);
-      const privTown1 = await createTownForTesting(undefined, false);
-      const pubTown2 = await createTownForTesting(undefined, true);
-      const privTown2 = await createTownForTesting(undefined, false);
+      const userId = await createUserForTesting('testUser2', '111111111', 'test2@gmail.com');
+      const pubTown1 = await createTownForTesting(userId, undefined, true);
+      const privTown1 = await createTownForTesting(userId, undefined, false);
+      const pubTown2 = await createTownForTesting(userId, undefined, true);
+      const privTown2 = await createTownForTesting(userId, undefined, false);
 
       const towns = await apiClient.listTowns();
       expectTownListMatches(towns, pubTown1);
@@ -93,10 +127,11 @@ describe('TownsServiceAPIREST', () => {
       expectTownListMatches(towns, privTown2);
     });
     it('Allows for multiple towns with the same friendlyName', async () => {
-      const pubTown1 = await createTownForTesting(undefined, true);
-      const privTown1 = await createTownForTesting(pubTown1.friendlyName, false);
-      const pubTown2 = await createTownForTesting(pubTown1.friendlyName, true);
-      const privTown2 = await createTownForTesting(pubTown1.friendlyName, false);
+      const userId = await createUserForTesting('testUser3', '111111111', 'test3@gmail.com');
+      const pubTown1 = await createTownForTesting(userId, undefined, true);
+      const privTown1 = await createTownForTesting(userId, pubTown1.friendlyName, false);
+      const pubTown2 = await createTownForTesting(userId, pubTown1.friendlyName, true);
+      const privTown2 = await createTownForTesting(userId, pubTown1.friendlyName, false);
 
       const towns = await apiClient.listTowns();
       expectTownListMatches(towns, pubTown1);
@@ -108,7 +143,8 @@ describe('TownsServiceAPIREST', () => {
 
   describe('CoveyTownDeleteAPI', () => {
     it('Throws an error if the password is invalid', async () => {
-      const { coveyTownID } = await createTownForTesting(undefined, true);
+      const userId = await createUserForTesting('testUser4', '111111111', 'test4@gmail.com');
+      const { coveyTownID } = await createTownForTesting(userId, undefined, true);
       try {
         await apiClient.deleteTown({
           coveyTownID,
@@ -120,7 +156,8 @@ describe('TownsServiceAPIREST', () => {
       }
     });
     it('Throws an error if the townID is invalid', async () => {
-      const { townUpdatePassword } = await createTownForTesting(undefined, true);
+      const userId = await createUserForTesting('testUser5', '111111111', 'test5@gmail.com');
+      const { townUpdatePassword } = await createTownForTesting(userId, undefined, true);
       try {
         await apiClient.deleteTown({
           coveyTownID: nanoid(),
@@ -132,7 +169,8 @@ describe('TownsServiceAPIREST', () => {
       }
     });
     it('Deletes a town if given a valid password and town, no longer allowing it to be joined or listed', async () => {
-      const { coveyTownID, townUpdatePassword } = await createTownForTesting(undefined, true);
+      const userId = await createUserForTesting('testUser6', '111111111', 'test6@gmail.com');
+      const { coveyTownID, townUpdatePassword } = await createTownForTesting(userId, undefined, true);
       await apiClient.deleteTown({
         coveyTownID,
         coveyTownPassword: townUpdatePassword,
@@ -154,7 +192,8 @@ describe('TownsServiceAPIREST', () => {
   });
   describe('CoveyTownUpdateAPI', () => {
     it('Checks the password before updating any values', async () => {
-      const pubTown1 = await createTownForTesting(undefined, true);
+      const userId = await createUserForTesting('testUser7', '111111111', 'test7@gmail.com');
+      const pubTown1 = await createTownForTesting(userId, undefined, true);
       expectTownListMatches(await apiClient.listTowns(), pubTown1);
       try {
         await apiClient.updateTown({
@@ -174,7 +213,8 @@ describe('TownsServiceAPIREST', () => {
       expectTownListMatches(await apiClient.listTowns(), pubTown1);
     });
     it('Updates the friendlyName and visbility as requested', async () => {
-      const pubTown1 = await createTownForTesting(undefined, false);
+      const userId = await createUserForTesting('testUser8', '111111111', 'test8@gmail.com');
+      const pubTown1 = await createTownForTesting(userId, undefined, false);
       expectTownListMatches(await apiClient.listTowns(), pubTown1);
       await apiClient.updateTown({
         coveyTownID: pubTown1.coveyTownID,
@@ -187,7 +227,8 @@ describe('TownsServiceAPIREST', () => {
       expectTownListMatches(await apiClient.listTowns(), pubTown1);
     });
     it('Does not update the visibility if visibility is undefined', async () => {
-      const pubTown1 = await createTownForTesting(undefined, true);
+      const userId = await createUserForTesting('testUser9', '111111111', 'test9@gmail.com');
+      const pubTown1 = await createTownForTesting(userId, undefined, true);
       expectTownListMatches(await apiClient.listTowns(), pubTown1);
       await apiClient.updateTown({
         coveyTownID: pubTown1.coveyTownID,
@@ -201,7 +242,8 @@ describe('TownsServiceAPIREST', () => {
 
   describe('CoveyMemberAPI', () => {
     it('Throws an error if the town does not exist', async () => {
-      await createTownForTesting(undefined, true);
+      const userId = await createUserForTesting('testUser10', '111111111', 'test10@gmail.com');
+      await createTownForTesting(userId, undefined, true);
       try {
         await apiClient.joinTown({
           userName: nanoid(),
@@ -215,8 +257,9 @@ describe('TownsServiceAPIREST', () => {
       }
     });
     it('Admits a user to a valid public or private town', async () => {
-      const pubTown1 = await createTownForTesting(undefined, true);
-      const privTown1 = await createTownForTesting(undefined, false);
+      const userId = await createUserForTesting('testUser11', '111111111', 'test11@gmail.com');
+      const pubTown1 = await createTownForTesting(userId, undefined, true);
+      const privTown1 = await createTownForTesting(userId, undefined, false);
       const res = await apiClient.joinTown({
         userName: nanoid(),
         coveyTownID: pubTown1.coveyTownID,

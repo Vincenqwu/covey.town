@@ -1,4 +1,4 @@
-import { Express } from 'express';
+import express, { Express } from 'express';
 import io from 'socket.io';
 import { Server } from 'http';
 import { StatusCodes } from 'http-status-codes';
@@ -21,7 +21,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
   /*
    * Create a new session (aka join a town)
    */
-  app.post('/sessions', verifyJWT, async (req, res) => {
+  app.post('/sessions', express.json(), verifyJWT, async (req, res) => {
     try {
       const result = await townJoinHandler({
         userName: req.body.userName,
@@ -41,7 +41,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
   /**
    * Delete a town
    */
-  app.delete('/towns/:townID/:townPassword', verifyJWT, async (req, res) => {
+  app.delete('/towns/:townID/:townPassword', express.json(), verifyJWT, async (req, res) => {
     try {
       const result = townDeleteHandler({
         coveyTownID: req.params.townID,
@@ -67,7 +67,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
   /**
    * List all towns
    */
-  app.get('/towns', verifyJWT, async (_req, res) => {
+  app.get('/towns', express.json(), verifyJWT, async (_req, res) => {
     try {
       const result = townListHandler();
       res.status(StatusCodes.OK)
@@ -84,7 +84,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
   /**
    * Create a town
    */
-  app.post('/towns', verifyJWT, async (req, res) => {
+  app.post('/towns', express.json(), verifyJWT, async (req, res) => {
     try {
       // if userId exists, create a new town
       if (mongoose.Types.ObjectId.isValid(req.body.userId)) {
@@ -101,9 +101,10 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
             capacity: 20,
           });
           // save town and respond
-          const town = await newTown.save();
+          await newTown.save();
           res.status(StatusCodes.OK)
-            .json(town);
+            .json(result);
+
         } else {
           res.status(404).json('Cannot create town because user not found');
         }
@@ -122,7 +123,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
   /**
    * Update a town
    */
-  app.patch('/towns/:townID', verifyJWT, async (req, res) => {
+  app.patch('/towns/:townID', express.json(), verifyJWT, async (req, res) => {
     try {
       const result = townUpdateHandler({
         coveyTownID: req.params.townID,
@@ -154,7 +155,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
     }
   });
 
-  app.post('/towns/:townID/conversationAreas', verifyJWT, async (req, res) => {
+  app.post('/towns/:townID/conversationAreas', express.json(), verifyJWT, async (req, res) => {
     try {
       const result = conversationAreaCreateHandler({
         coveyTownID: req.params.townID,
