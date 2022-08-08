@@ -59,6 +59,7 @@ export interface TownJoinResponse {
  * Payload sent by client to create a Town in Covey.Town
  */
 export interface TownCreateRequest {
+  userId: string;
   friendlyName: string;
   isPubliclyListed: boolean;
 }
