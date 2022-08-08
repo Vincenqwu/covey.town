@@ -14,7 +14,7 @@ import loadTownsFromDB from './townsLoader';
 dotenv.config();
 
 mongoose.connect(
-  process.env.MONGO_URL!,
+  process.env.MONGO_URL || '',
 ).then(() => {
   console.log('Connected to MongoDB');
   loadTownsFromDB();
