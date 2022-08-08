@@ -80,40 +80,52 @@ export default function SignIn() {
 
   const [user, setUser] = useState('');
   const [pwd, setPwd] = useState('');
+  const [token, setToken] = useState('');
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState(false);
-
+  const [isChecked, setIsChecked] = useState('false');
 
   const savedUsername = localStorage.getItem("username");
   const savedPassword = localStorage.getItem("password");
-
-
-  // if (savedPassword !== null) {
-  //   setPwd(savedPassword);
-  // }
-
+  const saveedIsChecked = localStorage.getItem("ischecked");
 
   useEffect(() => {
     setErrMsg('');
   }, [user, pwd]);
 
   useEffect(() => {
-    if (savedUsername !== null) {
+    console.log("check success 1");
+    console.log(saveedIsChecked);
+    console.log("check username 2");
+    console.log(savedUsername !== null);
+    if (saveedIsChecked === "true" && savedUsername !== null) {
       setUser(savedUsername);
+      console.log("check success");
     }
   }, []);
 
   useEffect(() => {
-    if (savedPassword !== null) {
+    if (saveedIsChecked === "true" && savedPassword !== null) {
       setPwd(savedPassword);
     }
   }, []);
 
-  let isChecked = false;
+
   const handleCheckBox = (event: { target: { checked: any; }; }) => {
-    // console.log(event.target.checked);
-    isChecked = event.target.checked;
+    setIsChecked(event.target.checked);
   };
+
+  useEffect(() => {
+    if (success === true) {
+      localStorage.setItem("username", user);
+      localStorage.setItem("password", pwd);
+      localStorage.setItem("x-access-token", token);
+      localStorage.setItem("ischecked", isChecked);
+      console.log(token);
+    }
+  }, [success, setSuccess]);
+
+  
 
   const handelLogin = async(e: { preventDefault: () => void; })=>{
       e.preventDefault();
@@ -121,7 +133,7 @@ export default function SignIn() {
 
       const username = user;
       const password = pwd;
-
+      
       // localStorage.setItem("username", username);
       // localStorage.setItem("password", password);
 
@@ -133,15 +145,13 @@ export default function SignIn() {
             headers: { 'Content-Type': 'application/json' },
           }
         );
-
-        if (isChecked === true) {
-          localStorage.setItem("username", user);
-          localStorage.setItem("password", pwd);
-        }
-
+        setToken(response?.data.token);
+        setSuccess(true);
         setUser('');
 			  setPwd('');
-        setSuccess(true);
+
+        console.log("here");
+        
         
 
         // console.log(response);
