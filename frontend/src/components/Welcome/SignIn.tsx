@@ -83,9 +83,37 @@ export default function SignIn() {
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState(false);
 
+
+  const savedUsername = localStorage.getItem("username");
+  const savedPassword = localStorage.getItem("password");
+
+
+  // if (savedPassword !== null) {
+  //   setPwd(savedPassword);
+  // }
+
+
   useEffect(() => {
     setErrMsg('');
   }, [user, pwd]);
+
+  useEffect(() => {
+    if (savedUsername !== null) {
+      setUser(savedUsername);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (savedPassword !== null) {
+      setPwd(savedPassword);
+    }
+  }, []);
+
+  let isChecked = false;
+  const handleCheckBox = (event: { target: { checked: any; }; }) => {
+    // console.log(event.target.checked);
+    isChecked = event.target.checked;
+  };
 
   const handelLogin = async(e: { preventDefault: () => void; })=>{
       e.preventDefault();
@@ -93,6 +121,9 @@ export default function SignIn() {
 
       const username = user;
       const password = pwd;
+
+      // localStorage.setItem("username", username);
+      // localStorage.setItem("password", password);
 
       try {
         const response = await axios.post(
@@ -102,9 +133,17 @@ export default function SignIn() {
             headers: { 'Content-Type': 'application/json' },
           }
         );
+
+        if (isChecked === true) {
+          localStorage.setItem("username", user);
+          localStorage.setItem("password", pwd);
+        }
+
         setUser('');
 			  setPwd('');
         setSuccess(true);
+        
+
         // console.log(response);
       } catch (err) {
         setErrMsg('Login Failed');
@@ -113,6 +152,8 @@ export default function SignIn() {
       }
 
   };
+
+
 
   return (
     <>
@@ -167,6 +208,7 @@ export default function SignIn() {
                     id="username"
                     label="Username"
                     name="username"
+                    value = {user}
                     autoFocus
                   />
                   <TextField
@@ -179,10 +221,11 @@ export default function SignIn() {
                     label="Password"
                     type="password"
                     id="password"
+                    value = {pwd}
                     autoComplete="current-password"
                   />
                   <FormControlLabel
-                    control={<Checkbox value="remember" color="primary" />}
+                    control={<Checkbox value="remember" color="primary" onChange={handleCheckBox}/>}
                     label="Remember me"
                   />
                   <Button
