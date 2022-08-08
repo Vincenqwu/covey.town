@@ -11,6 +11,8 @@ module.exports = {
   ],
   parserOptions: {
     project: './tsconfig.json',
+    tsconfigRootDir: __dirname,
+    sourceType: 'module',
     warnOnUnsupportedTypeScriptVersion: false,
   },
   settings: {
@@ -23,6 +25,7 @@ module.exports = {
     'no-underscore-dangle': 0,
     'no-param-reassign': 0,
     'no-restricted-syntax': 0,
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }], // add this by yying
   },
   overrides: [
     {

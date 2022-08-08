@@ -1,0 +1,62 @@
+.bannerContainer {
+  display: inline-block;
+  width: 100%;
+  height: 60px;
+  color: rgb(224, 174, 174);
+  background-color: #b5cfd8;
+}
+
+.bannerImg {
+  width: 100px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.btn-cancel-account {
+  margin-left: 60px;
+  margin-right: 60px;
+  width: 160px;
+  height: 35px;
+  font-size: 15px;
+  border: 1px solid #07709d;
+  border-radius: 5px;
+  padding: 3px;
+  margin-top: 15px;
+  float: right;
+  background: #b5cfd8;
+  color: rgb(202, 6, 6);
+  font-weight: 600;
+  font-style: italic;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.btn-update {
+  margin-left: 60px;
+  margin-right: 100px;
+  width: 160px;
+  height: 35px;
+  border: 1px solid #07709d;
+  border-radius: 5px;
+  padding: 3px;
+  margin-top: 15px;
+  font-size: 15px;
+  float: right;
+  background: #b5cfd8;
+  color: rgb(202, 6, 6);
+  font-weight: 600;
+  font-style: italic;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.logo {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  margin-left: 60px;
+  margin-right: auto;
+  font-style: italic;
+  font-weight: bold;
+  align-items: center;
+  line-height: 55px;
+  font-size: 50px;
+}
