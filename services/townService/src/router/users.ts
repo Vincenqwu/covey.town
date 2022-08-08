@@ -122,4 +122,33 @@ userRouter.get('/:id/towns', verifyJWT, async (req, res) => {
   }
 });
 
+// update user's profile information
+userRouter.put('/:username', verifyJWT, async (req, res) => {
+  const user = await User.findOne({
+    username: req.params.username,
+  });
+  if (!user) {
+    res.status(404).json('user not found');
+    return;
+  }
+  if (req.body.password) {
+    try {
+      const salt = await bcrypt.genSalt(10);
+      req.body.password = await bcrypt.hash(req.body.password, salt);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  }
+  try {
+    await User.updateOne(
+      { username: req.params.username },
+      {
+        $set: req.body,
+      });
+    res.status(200).json('profile has been updated');
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 export default userRouter;
