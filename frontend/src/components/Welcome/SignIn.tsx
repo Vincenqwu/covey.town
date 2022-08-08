@@ -18,7 +18,10 @@ import axios from './api/axios';
 
 const LOGIN_URL = '/users/login';
  
-
+/**
+ * This is the Copyright component 
+ * @returns a html
+ */
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -31,6 +34,9 @@ function Copyright() {
   );
 }
 
+/**
+ * This is the html formatting.
+ */
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "100vh",
@@ -65,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(1)
   },
   submit: {
@@ -73,7 +79,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-
+/**
+ * This is the SignIn component. 
+ * @returns a html
+ */
 export default function SignIn() {
   const classes = useStyles();
   // const { setAuth } = useContext(AuthContext);
@@ -94,13 +103,8 @@ export default function SignIn() {
   }, [user, pwd]);
 
   useEffect(() => {
-    console.log("check success 1");
-    console.log(saveedIsChecked);
-    console.log("check username 2");
-    console.log(savedUsername !== null);
     if (saveedIsChecked === "true" && savedUsername !== null) {
       setUser(savedUsername);
-      console.log("check success");
     }
   }, []);
 
@@ -109,7 +113,6 @@ export default function SignIn() {
       setPwd(savedPassword);
     }
   }, []);
-
 
   const handleCheckBox = (event: { target: { checked: any; }; }) => {
     setIsChecked(event.target.checked);
@@ -121,21 +124,20 @@ export default function SignIn() {
       localStorage.setItem("password", pwd);
       localStorage.setItem("x-access-token", token);
       localStorage.setItem("ischecked", isChecked);
-      console.log(token);
     }
   }, [success, setSuccess]);
 
   
-
+  /**
+   * This is the handelLogin function, when user input the valid username and password, the user would login successfully.
+   * @param e the event
+   */
   const handelLogin = async(e: { preventDefault: () => void; })=>{
       e.preventDefault();
         // 调用api，返回信息，是否登陆成功，一个json，name，local jwt token，
 
       const username = user;
       const password = pwd;
-      
-      // localStorage.setItem("username", username);
-      // localStorage.setItem("password", password);
 
       try {
         const response = await axios.post(
@@ -150,15 +152,18 @@ export default function SignIn() {
         setUser('');
 			  setPwd('');
 
-        console.log("here");
-        
-        
-
-        // console.log(response);
       } catch (err) {
-        setErrMsg('Login Failed');
-        
-        // console.log(err);
+        if (err instanceof Error) {
+          if (err.message === "Request failed with status code 404") {
+            setErrMsg('Username does not exist');
+          } else if (err.message === "Request failed with status code 400") {
+            setErrMsg(' Password is wrong');
+          } else {
+            setErrMsg('Login Failed');
+          }
+        } else {
+          setErrMsg('Login Failed');
+        }
       }
 
   };
