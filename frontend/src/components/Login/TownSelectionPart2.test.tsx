@@ -175,7 +175,7 @@ describe('Town Selection - depends on Part 1 passing', () => {
         });
         await waitFor(() => expect(mockToast)
           .toBeCalledWith({
-            description: 'Please select a username',
+            description: 'Please select a nickname',
             title: 'Unable to join town',
             status: 'error',
           }));
@@ -374,7 +374,7 @@ describe('Town Selection - depends on Part 1 passing', () => {
               await waitFor(() => expect(mockToast)
                 .toBeCalledWith({
                   title: 'Unable to join town',
-                  description: 'Please select a username',
+                  description: 'Please select a nickname',
                   status: 'error'
                 }))
             } else {
