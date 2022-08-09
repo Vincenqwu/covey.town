@@ -59,7 +59,7 @@ export interface TownJoinResponse {
  * Payload sent by client to create a Town in Covey.Town
  */
 export interface TownCreateRequest {
-  userId: string;
+  username: string;
   friendlyName: string;
   isPubliclyListed: boolean;
 }
@@ -109,6 +109,38 @@ export interface ConversationAreaCreateRequest {
 }
 
 /**
+ * Payload sent by the client to register a new user
+ */
+export interface UserRegisterRequest {
+  username: string;
+  password: string;
+  email: string;
+}
+
+/**
+ * Payload sent by the client to sign in a user
+ */
+export interface UserLoginRequest {
+  username: string;
+  password: string;
+}
+
+export interface UserUpdateRequest {
+  username: string;
+  password: string;
+  email: string;
+}
+
+export interface RequestHeader {
+  'x-access-token': string;
+
+}
+export interface RequestConfig {
+  headers: RequestHeader;
+}
+
+
+/**
  * Envelope that wraps any response from the server
  */
 export interface ResponseEnvelope<T> {
@@ -149,7 +181,11 @@ export default class TownsServiceClient {
     throw new Error(`Error processing request: ${response.data.message}`);
   }
 
-  async createTown(requestData: TownCreateRequest): Promise<TownCreateResponse> {
+  async createTown(requestData: TownCreateRequest, requestConfig?: RequestConfig): Promise<TownCreateResponse> {
+    if (requestConfig) {
+      const responseWrapper = await this._axios.post<ResponseEnvelope<TownCreateResponse>>('/towns', requestData, requestConfig);
+      return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+    }
     const responseWrapper = await this._axios.post<ResponseEnvelope<TownCreateResponse>>('/towns', requestData);
     return TownsServiceClient.unwrapOrThrowError(responseWrapper);
   }
@@ -174,9 +210,41 @@ export default class TownsServiceClient {
     return TownsServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
-  async createConversationArea(requestData: ConversationAreaCreateRequest) : Promise<void>{
+  async createConversationArea(requestData: ConversationAreaCreateRequest) : Promise<any>{
     const responseWrapper = await this._axios.post(`/towns/${requestData.coveyTownID}/conversationAreas`, requestData);
     return TownsServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
+  async userRegister(requestData: UserRegisterRequest) : Promise<any>{
+    const responseWrapper = await this._axios.post('/users/register', requestData);
+    return responseWrapper;
+  }
+
+  async userLogin(requestData: UserLoginRequest) : Promise<any>{
+    const responseWrapper = await this._axios.post('/users/login', requestData);
+    return responseWrapper;
+  }
+
+  async deleteUser(username: string, requestConfig: RequestConfig) : Promise<any>{
+    const responseWrapper = await this._axios.delete(`/users/${username}`, requestConfig);
+    return responseWrapper;
+  }
+
+  async updateUser(requestData: UserUpdateRequest, requestConfig: RequestConfig) : Promise<any>{
+    const responseWrapper = await this._axios.put(`/users/${requestData.username}`, requestData, requestConfig);
+    return responseWrapper;
+  }
+
+  async getUser(username: string, requestConfig: RequestConfig) : Promise<any>{
+    const responseWrapper = await this._axios.get(`/users/${username}`, requestConfig);
+    return responseWrapper;
+  }
+
+  // async listUserTowns(request)
+
+  async userValidateJWT(requestConfig: RequestConfig) : Promise<any>{
+    const responseWrapper = await this._axios.get('/users/validate', requestConfig);
+    return responseWrapper;
+  }
+  
 }

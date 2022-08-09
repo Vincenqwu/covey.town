@@ -285,19 +285,19 @@ Get user's profile information with username
 
 # Get User's Towns
 
-get all the towns created by the user by user id
+get all the towns created by the user by username
 
-**URL** : `/:id/towns`
+**URL** : `/:username/towns`
 
 **Method** : `GET`
 
 **JWT Auth required** : YES
 
-**Parameter** : User's _id
+**Parameter** : username
 
 ## Success Response
 
-**Condition** : JWT is valid and user _id exists
+**Condition** : JWT is valid and username exists
 
 **Code** : `200`
 
@@ -317,6 +317,17 @@ get all the towns created by the user by user id
         "__v": 0
     }
 ]
+```
+## Error Response
+
+**Condition** : username does not exist
+
+**Code** : `404`
+
+**Content** :
+
+```json
+user not found
 ```
 
 

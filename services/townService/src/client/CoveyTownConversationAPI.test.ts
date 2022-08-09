@@ -30,7 +30,7 @@ describe('Create Conversation Area API', () => {
   let apiClient: TownsServiceClient;
 
   async function createTownForTesting(
-    userId: string,
+    username: string,
     friendlyNameToUse?: string,
     isPublic = false,
   ): Promise<TestTownData> {
@@ -39,7 +39,7 @@ describe('Create Conversation Area API', () => {
         ? friendlyNameToUse
         : `${isPublic ? 'Public' : 'Private'}TestingTown=${nanoid()}`;
     const ret = await apiClient.createTown({
-      userId,
+      username,
       friendlyName,
       isPubliclyListed: isPublic,
     });
@@ -60,8 +60,7 @@ describe('Create Conversation Area API', () => {
     });
     await newUser.save();
     const user = await User.find({});
-    const userId = user[0]._id.valueOf();
-    return userId;
+    return user[0].username.valueOf();
   }
 
   beforeAll(async () => {
@@ -83,8 +82,8 @@ describe('Create Conversation Area API', () => {
     await server.close();
   });
   it('Executes without error when creating a new conversation', async () => {
-    const userId = await createUserForTesting('testUser', '111111111', 'test@gmail.com');
-    const testingTown = await createTownForTesting(userId, undefined, true);
+    const username = await createUserForTesting('testUser', '111111111', 'test@gmail.com');
+    const testingTown = await createTownForTesting(username, undefined, true);
     const testingSession = await apiClient.joinTown({
       userName: nanoid(),
       coveyTownID: testingTown.coveyTownID,
