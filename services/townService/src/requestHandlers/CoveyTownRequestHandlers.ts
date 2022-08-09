@@ -45,7 +45,7 @@ export interface TownJoinResponse {
 export interface TownCreateRequest {
   friendlyName: string;
   isPubliclyListed: boolean;
-  userId: string;
+  username: string;
 }
 
 /**
