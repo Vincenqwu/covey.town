@@ -24,6 +24,9 @@
     "jsx": "react-jsx"
   },
   "include": [
+    ".eslintrc.js", //add by yingying
+    "other_src", //add by yingying
+    "src/util", // add by yying
     "src"
   ]
 }

@@ -20,6 +20,7 @@
     "homepage": "https://github.com/neu-se/covey.town#readme",
     "devDependencies": {
         "@types/jest": "^26.0.15",
+        "@types/react": "^17.0.48",
         "@typescript-eslint/eslint-plugin": "^4.8.1",
         "@typescript-eslint/parser": "^4.8.1",
         "eslint": "^7.13.0",
@@ -45,9 +46,12 @@
         "npm": "8.1.x"
     },
     "dependencies": {
+        "@material-ui/core": "^4.12.4",
+        "@testing-library/react": "^12.1.5",
         "@types/ramda": "^0.27.34",
         "mongoose": "^6.5.0",
         "ramda": "^0.27.1",
+        "react": "^17.0.2",
         "typescript-is": "^0.17.0"
     }
 }
