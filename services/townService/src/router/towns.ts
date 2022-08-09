@@ -2,7 +2,6 @@ import express, { Express } from 'express';
 import io from 'socket.io';
 import { Server } from 'http';
 import { StatusCodes } from 'http-status-codes';
-import mongoose from 'mongoose';
 import {
   conversationAreaCreateHandler,
   townCreateHandler, townDeleteHandler,
@@ -86,32 +85,27 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
    */
   app.post('/towns', express.json(), verifyJWT, async (req, res) => {
     try {
-      // if userId exists, create a new town
-      if (mongoose.Types.ObjectId.isValid(req.body.userId)) {
-        const user = await User.findById(req.body.userId);
-        if (user) {
-          const result = townCreateHandler(req.body);
-          // assign the newly created town with user id
-          const newTown = new Town({
-            coveyTownId: result.response?.coveyTownID,
-            userId: req.body.userId,
-            townUpdatePassword: result.response?.coveyTownPassword,
-            isPublic: req.body.isPubliclyListed,
-            friendlyName: req.body.friendlyName,
-            capacity: 20,
-          });
-          // save town and respond
-          await newTown.save();
-          res.status(StatusCodes.OK)
-            .json(result);
+      const user = await User.findOne({ username: req.body.username });
+      // if username exists, create a new town
+      if (user) {
+        const result = townCreateHandler(req.body);
+        // assign the newly created town with user id
+        const newTown = new Town({
+          coveyTownId: result.response?.coveyTownID,
+          userId: user._id,
+          townUpdatePassword: result.response?.coveyTownPassword,
+          isPublic: req.body.isPubliclyListed,
+          friendlyName: req.body.friendlyName,
+          capacity: 20,
+        });
+        // save town and respond
+        await newTown.save();
+        res.status(StatusCodes.OK)
+          .json(result);
 
-        } else {
-          res.status(404).json('Cannot create town because user not found');
-        }
       } else {
-        res.status(404).json('User id is invalid');
+        res.status(404).json('Cannot create town because user not found');
       }
-      
     } catch (err) {
       logError(err);
       res.status(StatusCodes.INTERNAL_SERVER_ERROR)

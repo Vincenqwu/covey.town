@@ -8,12 +8,12 @@ import signJWT from '../middleware/signJWT';
 const userRouter: express.Router = express.Router();
 
 // validate user is logged in/authenticated
-userRouter.get('/validate', verifyJWT, (_, res) => res.status(200).json({
+userRouter.get('/validate', express.json(), verifyJWT, (_, res) => res.status(200).json({
   message: 'Token validated',
 }));
 
 // user sign up
-userRouter.post('/register', async (req, res) => {
+userRouter.post('/register', express.json(), async (req, res) => {
   try {
     // generate new password
     const salt = await bcrypt.genSalt(10);
@@ -39,7 +39,7 @@ userRouter.post('/register', async (req, res) => {
 });
 
 // user login
-userRouter.post('/login', async (req, res) => {
+userRouter.post('/login', express.json(), async (req, res) => {
   try {
     const user = await User.findOne({
       username: req.body.username,
@@ -73,7 +73,7 @@ userRouter.post('/login', async (req, res) => {
 });
 
 // delete a user's account by username
-userRouter.delete('/:username', verifyJWT, async (req, res) => {
+userRouter.delete('/:username', express.json(), verifyJWT, async (req, res) => {
   try {
     const user = await User.findOne({
       username: req.params.username,
@@ -96,7 +96,7 @@ userRouter.delete('/:username', verifyJWT, async (req, res) => {
 });
 
 // get a user's info by username
-userRouter.get('/:username', verifyJWT, async (req, res) => {
+userRouter.get('/:username',  express.json(), verifyJWT, async (req, res) => {
   try {
     const user = await User.findOne({
       username: req.params.username,
@@ -112,10 +112,15 @@ userRouter.get('/:username', verifyJWT, async (req, res) => {
 });
 
 
-// get all the towns created by the user by user id
-userRouter.get('/:id/towns', verifyJWT, async (req, res) => {
+// get all the towns created by the user by username
+userRouter.get('/:username/towns',  express.json(), verifyJWT, async (req, res) => {
   try {
-    const towns = await Town.find({ userId: req.params.id });
+    const user = await User.findOne({ username: req.params.username });
+    if (!user) {
+      res.status(404).json('user not found');
+      return;
+    }
+    const towns = await Town.find({ userId: user._id });
     res.status(200).json(towns);
   } catch (err) {
     res.status(500).json(err);
@@ -123,7 +128,7 @@ userRouter.get('/:id/towns', verifyJWT, async (req, res) => {
 });
 
 // update user's profile information
-userRouter.put('/:username', verifyJWT, async (req, res) => {
+userRouter.put('/:username', express.json(), verifyJWT, async (req, res) => {
   const user = await User.findOne({
     username: req.params.username,
   });
