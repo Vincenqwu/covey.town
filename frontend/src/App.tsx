@@ -12,6 +12,7 @@ import React, {
 } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
+import axios from './components/Welcome/api/axios';
 import './App.css';
 import ConversationArea, { ServerConversationArea } from './classes/ConversationArea';
 import Player, { ServerPlayer, UserLocation } from './classes/Player';
@@ -40,6 +41,7 @@ import { CoveyAppState } from './CoveyTypes';
 
 export const MOVEMENT_UPDATE_DELAY_MS = 0;
 export const CALCULATE_NEARBY_PLAYERS_MOVING_DELAY_MS = 300;
+const VALIDATE_URL = '/users/validate';
 type CoveyAppUpdate =
   | {
       action: 'doConnect';
@@ -132,6 +134,9 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
   const [nearbyPlayers, setNearbyPlayers] = useState<Player[]>([]);
   // const [currentLocation, setCurrentLocation] = useState<UserLocation>({moving: false, rotation: 'front', x: 0, y: 0});
   const [conversationAreas, setConversationAreas] = useState<ConversationArea[]>([]);
+  const [isSignin, setIsSignin] = useState(false);
+
+ 
 
   const setupGameController = useCallback(
     async (initData: TownJoinResponse) => {
@@ -273,8 +278,38 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
     });
   }, [dispatchAppUpdate, setOnDisconnect]);
 
+
+  const checkSignin = async()=>{
+    const token = localStorage.getItem("x-access-token");
+    const username = localStorage.getItem("username");
+    try {
+      const response = await axios.get(
+        VALIDATE_URL,
+        {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' , 
+          'x-access-token' : token}
+        }
+      );
+        return true;
+    } catch (err) {
+      console.log("unverified");
+      return false;
+    }
+};
+
+  useEffect(()=>{
+    checkSignin().then((res) => {
+      if (res === true) {
+        setIsSignin(true);
+      } else {
+        setIsSignin(false);
+      }
+    })
+  }, []);
+
   const page = useMemo(() => {
     if (!appState.sessionToken) {
+      console.log("here");
       return <Login doLogin={setupGameController} />;
       // return <SignIn history={[]} />;
       // return <SignUp />;
@@ -291,21 +326,34 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
   }, [setupGameController, appState.sessionToken, videoInstance]);
 
   return (
-    <CoveyAppContext.Provider value={appState}>
-      <VideoContext.Provider value={Video.instance()}>
-        <ChatProvider>
-          <PlayerMovementContext.Provider value={playerMovementCallbacks}>
-            <PlayersInTownContext.Provider value={playersInTown}>
-              <NearbyPlayersContext.Provider value={nearbyPlayers}>
-                <ConversationAreasContext.Provider value={conversationAreas}>
-                  {page}
-                </ConversationAreasContext.Provider>
-              </NearbyPlayersContext.Provider>
-            </PlayersInTownContext.Provider>
-          </PlayerMovementContext.Provider>
-        </ChatProvider>
-      </VideoContext.Provider>
-    </CoveyAppContext.Provider>
+    <>
+    {
+      isSignin?  
+      (<CoveyAppContext.Provider value={appState}>
+        <VideoContext.Provider value={Video.instance()}>
+          <ChatProvider>
+            <PlayerMovementContext.Provider value={playerMovementCallbacks}>
+              <PlayersInTownContext.Provider value={playersInTown}>
+                <NearbyPlayersContext.Provider value={nearbyPlayers}>
+                  <ConversationAreasContext.Provider value={conversationAreas}>
+                    {page}
+                  </ConversationAreasContext.Provider>
+                </NearbyPlayersContext.Provider>
+              </PlayersInTownContext.Provider>
+            </PlayerMovementContext.Provider>
+          </ChatProvider>
+        </VideoContext.Provider>
+      </CoveyAppContext.Provider>) : 
+      (<section>
+        <h1>You are logged out!</h1>
+        <br />
+        <p><a href="/Signin">Please sign in to CoveyTown</a></p>
+      </section>
+      )
+     
+    }
+    </>
+    
   );
 }
 
