@@ -1,7 +1,7 @@
 
 [[redirects]]
   from = "/*"
-  to = "/intex.html"
+  to = "/index.html"
   status = 200
 
 
