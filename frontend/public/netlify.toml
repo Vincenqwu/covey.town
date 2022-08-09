@@ -1,0 +1,23 @@
+[[redirects]]
+  from = "/"
+  to = "/signup"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/signin"
+  to = "/signup"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/signup"
+  to = "/signin"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/signin"
+  to = "/welcome"
+  status = 200
+  force = false
