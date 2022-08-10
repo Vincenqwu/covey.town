@@ -38,6 +38,7 @@ import PlayerMovementContext, { PlayerMovementCallback } from './contexts/Player
 import PlayersInTownContext from './contexts/PlayersInTownContext';
 import VideoContext from './contexts/VideoContext';
 import { CoveyAppState } from './CoveyTypes';
+// import Update from './components/ProfilePage/PersonalInfor';
 
 export const MOVEMENT_UPDATE_DELAY_MS = 0;
 export const CALCULATE_NEARBY_PLAYERS_MOVING_DELAY_MS = 300;
@@ -309,10 +310,10 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
 
   const page = useMemo(() => {
     if (!appState.sessionToken) {
-      console.log("here");
+      
       return <Login doLogin={setupGameController} />;
       // return <SignIn history={[]} />;
-      // return <SignUp />;
+      // return <SignUp />
     }
     if (!videoInstance) {
       return <div>Loading...</div>;
@@ -347,7 +348,14 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
       (<section>
         <h1>You are logged out!</h1>
         <br />
-        <p><a href="/Signin">Please sign in to CoveyTown</a></p>
+        <p><a href="/signin">Please sign in to CoveyTown</a></p>
+            {/* <head>
+            <title>HTML Meta Tag</title>
+            <meta httpEquiv = "refresh" content = "3; url = /signin" />
+            </head>
+            <body>
+            <h1>You are logged out! Please sign in!</h1>
+            </body> */}
       </section>
       )
      

@@ -3,7 +3,7 @@ import { Switch, Route } from "react-router-dom";
 import App from "./App";
 import SignIn from "./components/Welcome/SignIn";
 import SignUp from "./components/Welcome/SignUp";
-import PersonalInfo from "./components/ProfilePage/PersonalInfor";
+import PersonalInfor from "./components/ProfilePage/PersonalInfor";
 
 export default function Routers(){
     return (
@@ -12,7 +12,7 @@ export default function Routers(){
             <Route path="/signin" component={SignIn} />
             <Route path="/signup" component={SignUp} />
             <Route path="/welcome" component={App} />
-            <Route path="/profile" component={PersonalInfo} />
+            <Route path="/profile" component={PersonalInfor} />
 
         </Switch>
     )

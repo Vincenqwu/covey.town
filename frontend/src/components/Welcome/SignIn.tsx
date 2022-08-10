@@ -15,6 +15,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import image from "./Images/image.jpg";
 import axios from './api/axios';
 
+
 const LOGIN_URL = '/users/login';
  
 /**
@@ -172,9 +173,13 @@ export default function SignIn() {
       {
         success? (
           <section>
-					<h1>You are logged in!</h1>
-					<br />
-					<p><a href="/welcome">Welcome to CoveyTown</a></p>
+          <head>
+            <title>HTML Meta Tag</title>
+            <meta httpEquiv = "refresh" content = "2; url = /welcome" />
+            </head>
+            <body>
+            <h1>You are logged in!</h1>
+            </body>
 				</section>
         ) : (
           
