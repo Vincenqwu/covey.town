@@ -159,8 +159,8 @@ export default class TownsServiceClient {
     return TownsServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
-  async updateTown(requestData: TownUpdateRequest): Promise<void> {
-    const responseWrapper = await this._axios.patch<ResponseEnvelope<void>>(`/towns/${requestData.coveyTownID}`, requestData);
+  async updateTown(requestData: TownUpdateRequest, requestConfig: RequestConfig): Promise<void> {
+    const responseWrapper = await this._axios.patch<ResponseEnvelope<void>>(`/towns/${requestData.coveyTownID}`, requestData, requestConfig);
     return TownsServiceClient.unwrapOrThrowError(responseWrapper, true);
   }
 

@@ -64,7 +64,9 @@ const TownSettings: React.FunctionComponent = () => {
           coveyTownPassword: roomUpdatePassword,
           friendlyName,
           isPubliclyListed
-        });
+        }, {headers : {
+          "x-access-token" : localStorage.getItem("x-access-token") || ''
+        }});
         toast({
           title: 'Town updated',
           description: 'To see the updated town, please exit and re-join this town',
