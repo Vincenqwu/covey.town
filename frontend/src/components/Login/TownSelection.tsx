@@ -40,7 +40,9 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
 
   const updateTownListings = useCallback(() => {
     // console.log(apiClient);
-    apiClient.listTowns()
+    apiClient.listTowns({headers : {
+      "x-access-token" : localStorage.getItem("x-access-token") || ''
+    }})
       .then((towns) => {
         setCurrentPublicTowns(towns.towns
           .sort((a, b) => b.currentOccupancy - a.currentOccupancy)
@@ -108,9 +110,12 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
     }
     try {
       const newTownInfo = await apiClient.createTown({
+        username: localStorage.getItem("username") || '',
         friendlyName: newTownName,
-        isPubliclyListed: newTownIsPublic
-      });
+        isPubliclyListed: newTownIsPublic,
+      }, {headers : {
+        "x-access-token" : localStorage.getItem("x-access-token") || ''
+      }});
       let privateMessage = <></>;
       if (!newTownIsPublic) {
         privateMessage =

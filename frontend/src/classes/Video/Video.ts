@@ -61,7 +61,10 @@ export default class Video {
         this.townsServiceClient.joinTown({
           coveyTownID: this._coveyTownID,
           userName: this._userName,
-        })
+          // token
+        }, {headers : {
+          "x-access-token" : localStorage.getItem("x-access-token") || ''
+        }})
           .then((result) => {
             this.sessionToken = result.coveySessionToken;
             this.videoToken = result.providerVideoToken;

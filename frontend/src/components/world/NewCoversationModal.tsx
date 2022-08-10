@@ -40,7 +40,9 @@ export default function NewConversationModal( {isOpen, closeModal, newConversati
             sessionToken,
             coveyTownID: currentTownID,
             conversationArea: conversationToCreate.toServerConversationArea(),
-          });
+          }, {headers : {
+            "x-access-token" : localStorage.getItem("x-access-token") || ''
+          }});
           toast({
             title: 'Conversation Created!',
             status: 'success',
