@@ -211,7 +211,10 @@ export default function SignUp() {
                 />
                 
                 {(user !== '' && !validName) && 
-                <h4>
+                <h4 style = {{
+                  fontSize: '1.5 rem',
+                  color: 'red',
+                }}>
                   4 to 24 characters.
                   <br />
                   Must begin with a letter.
@@ -231,7 +234,10 @@ export default function SignUp() {
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 {(email !== '' && !validEmail) && 
-                <h4>
+                <h4 style = {{
+                  fontSize: '1.5 rem',
+                  color: 'red',
+                }}>
                   Need a valid email.
 						    </h4>}
               </Grid>
@@ -248,7 +254,10 @@ export default function SignUp() {
                   onChange={(e) => setPwd(e.target.value)}
                 />
                 {(pwd !== '' && !validPwd) && 
-                <h4>
+                <h4 style = {{
+                  fontSize: '1.5 rem',
+                  color: 'red',
+                }}>
                   8 to 24 characters.
                   <br />
                   Must include uppercase and lowercase letters, a number and a

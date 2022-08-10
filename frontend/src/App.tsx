@@ -357,8 +357,7 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
             <h1>You are logged out! Please sign in!</h1>
             </body> */}
       </section>
-      )
-     
+      )  
     }
     </>
     
