@@ -73,7 +73,10 @@ import {
   ModalCloseButton,
   Button,
   useDisclosure,
-} from '@chakra-ui/react'
+  FormControl,
+  FormLabel,
+  Input,
+} from '@chakra-ui/react';
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
@@ -129,14 +132,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-
-// type responseType = {
-//   id: number;
-//   name?: string; 
-//   salary?: number; 
-// };
-
-
 // export default function SignIn(props: { history: string[]; }) {
 export default function Update() {
 
@@ -144,7 +139,7 @@ export default function Update() {
 
   // console.log(typeof classes.root);
 
-  const [viewForm, setViewForm] = useState(false);
+  // const [viewForm, setViewForm] = useState(false);
 
 
   const savedUsername = localStorage.getItem("username");
@@ -160,6 +155,7 @@ export default function Update() {
     try {
       const response = await axios.get(
         GETINFO_URL,
+        
         {
           headers: { 'Content-Type': 'application/json', 
           'x-access-token':  token},
@@ -173,27 +169,78 @@ export default function Update() {
     }
 
   }
+  const [oldPwd, setOldPwd] = useState('');
+  const [newUsername, setNewUsername] = useState('');
+  const [newPwd, setNewPwd] = useState('');
 
-  function BasicUsage() {
+
+  
+
+  function InitialFocus() {
     const { isOpen, onOpen, onClose } = useDisclosure()
+    
+    const initialRef = React.useRef(null)
+    const finalRef = React.useRef(null)
+
+
+    const [isChecked, setIsChecked] = useState(false);
+
+    
+  
+    useEffect(()=>{
+      if (savedPassword === oldPwd){
+        setIsChecked(true);
+      }
+
+    }, [oldPwd, newUsername, newPwd]);
+
+    const handelSave = async(e: { preventDefault: () => void; })=>{
+      e.preventDefault();
+      if (isChecked === true) {
+        console.log("do try catch");
+      }
+    }
+
+  
     return (
       <>
-        <Button onClick={onOpen}>Open Modal</Button>
+        <Button onClick={onOpen}>Edit</Button>
+        {/* <Button ml={4} ref={finalRef}>
+          I will receive focus on close
+        </Button> */}
   
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal
+          initialFocusRef={initialRef}
+          finalFocusRef={finalRef}
+          isOpen={isOpen}
+          onClose={onClose}
+        >
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Modal Title</ModalHeader>
+            <ModalHeader>Create your account</ModalHeader>
             <ModalCloseButton />
-            <ModalBody>
-              ssss
+            <ModalBody pb={6}>
+              <FormControl>
+                <FormLabel>Old password</FormLabel>
+                <Input ref={initialRef} placeholder='Old password' />
+              </FormControl>
+  
+              <FormControl mt={4}>
+                <FormLabel>New username or leave empty if no change</FormLabel>
+                <Input placeholder='New username' />
+              </FormControl>
+
+              <FormControl mt={4}>
+                <FormLabel>New password  or leave empty if no change</FormLabel>
+                <Input placeholder='New password' />
+              </FormControl>
             </ModalBody>
   
             <ModalFooter>
-              <Button colorScheme='blue' mr={3} onClick={onClose}>
-                Close
+              <Button colorScheme='blue' mr={3} onClick = {handelSave}>
+                Save
               </Button>
-              <Button variant='ghost'>Secondary Action</Button>
+              <Button onClick={onClose}>Cancel</Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
@@ -296,7 +343,7 @@ export default function Update() {
       control={<Checkbox value="remember" color="primary" />}
       label="Remember me"
     /> */}
-              <Button
+              {/* <Button
                 type="submit"
                 
                 variant="contained"
@@ -304,14 +351,15 @@ export default function Update() {
                 className={classes.submit}
               >
                 Edit
-              </Button>
+              </Button> */}
               {/* <Box mt={5}>
                 <Copyright />
               </Box> */}
+              <InitialFocus />
             </form>
           </div>
         </Grid>
-        <BasicUsage />
+        
       </Grid></>
   );
 }

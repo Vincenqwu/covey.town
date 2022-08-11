@@ -135,7 +135,7 @@ describe('Part 4 - Town Settings', () => {
           coveyTownPassword,
           friendlyName,
           isPubliclyListed: true
-        }));
+        }, {"headers": {"x-access-token": ""}}));
       expect(mockDeleteTown).not.toBeCalled();
 
     }, 10000);

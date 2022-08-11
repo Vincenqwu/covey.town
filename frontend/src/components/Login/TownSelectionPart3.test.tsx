@@ -197,8 +197,9 @@ describe('Town Selection - depends on Part 1 passing', () => {
           await waitFor(() => expect(mockCreateTown)
             .toBeCalledWith({
               friendlyName: townName,
-              isPubliclyListed: true
-            }));
+              isPubliclyListed: true,
+              username: "",
+            }, {"headers" : {"x-access-token" : ""}}));
         });
 
         it('calls createTown on the apiClient with the provided values (not public town)', async () => {
@@ -215,8 +216,9 @@ describe('Town Selection - depends on Part 1 passing', () => {
           await waitFor(() => expect(mockCreateTown)
             .toBeCalledWith({
               friendlyName: townName,
-              isPubliclyListed: false
-            }));
+              isPubliclyListed: false,
+              username: ""
+            }, {"headers": {"x-access-token": ""}}));
 
         });
 
@@ -234,8 +236,9 @@ describe('Town Selection - depends on Part 1 passing', () => {
           await waitFor(() => expect(mockCreateTown)
             .toBeCalledWith({
               friendlyName: townName,
-              isPubliclyListed: false
-            }));
+              isPubliclyListed: false,
+              username: ""
+            }, {"headers": {"x-access-token": ""}}));
           await waitFor(() => expect(mockToast)
             .toBeCalledWith(expect.objectContaining({
               title: `Town ${townName} is ready to go!`,
@@ -286,8 +289,9 @@ describe('Town Selection - depends on Part 1 passing', () => {
           await waitFor(() => expect(mockCreateTown)
             .toBeCalledWith({
               friendlyName: townName,
-              isPubliclyListed: true
-            }));
+              isPubliclyListed: true,
+              username: ""
+            }, {"headers": {"x-access-token": ""}}));
           await waitFor(() => expect(mockToast)
             .toBeCalledWith({
               title: 'Unable to connect to Towns Service',
