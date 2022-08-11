@@ -4,7 +4,7 @@
  */
 
 export interface PersonModel {
-  readonly nickName: string;
+  readonly username: string;
   readonly email: string;
   password: string;
 }
@@ -14,7 +14,7 @@ export interface PersonModel {
  */
 
 export const usePersonModelDefaults = (): PersonModel => ({
-  nickName: "",
+  username: "",
   email: "",
   password: ""
 });

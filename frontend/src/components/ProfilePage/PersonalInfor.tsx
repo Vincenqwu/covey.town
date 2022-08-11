@@ -63,8 +63,17 @@
 // }
 
 import React, { useEffect, useState } from "react";
-// import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  useDisclosure,
+} from '@chakra-ui/react'
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
@@ -73,6 +82,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 // import { useParams } from "react-router";
+import axios from "../Welcome/api/axios"
 import NavBar from "./NavBar";
 
 
@@ -119,6 +129,14 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+
+// type responseType = {
+//   id: number;
+//   name?: string; 
+//   salary?: number; 
+// };
+
+
 // export default function SignIn(props: { history: string[]; }) {
 export default function Update() {
 
@@ -126,21 +144,66 @@ export default function Update() {
 
   // console.log(typeof classes.root);
 
-  const [account, setAccount] = React.useState({email:"",password:""});
-  const [data, setData] = useState();
   const [viewForm, setViewForm] = useState(false);
 
-  const handelAccount = (property: "email" | "password", event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>{
-
-    const accountCopy = {...account};
-    accountCopy[property] = event.target.value;
-
-    setAccount(accountCopy);
-  }
 
   const savedUsername = localStorage.getItem("username");
   const savedPassword = localStorage.getItem("password");
+  const token = localStorage.getItem("x-access-token");
 
+  const GETINFO_URL = `/users/${savedUsername}`;
+
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  
+  const showUsername = async() => {
+    try {
+      const response = await axios.get(
+        GETINFO_URL,
+        {
+          headers: { 'Content-Type': 'application/json', 
+          'x-access-token':  token},
+        }
+      );
+      setUsername(response.data.username);
+      setEmail(response.data.email);
+
+    } catch (err) {
+      console.log(err);
+    }
+
+  }
+
+  function BasicUsage() {
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    return (
+      <>
+        <Button onClick={onOpen}>Open Modal</Button>
+  
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Modal Title</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              ssss
+            </ModalBody>
+  
+            <ModalFooter>
+              <Button colorScheme='blue' mr={3} onClick={onClose}>
+                Close
+              </Button>
+              <Button variant='ghost'>Secondary Action</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </>
+    )
+  }
+  
+  useEffect(()=>{
+    showUsername();
+  }, []);
 
 
   // useEffect(()=>{
@@ -150,52 +213,38 @@ export default function Update() {
   // }, []);
 
 
-  const EditForm = () => {
-    const handleSubmit = async (event: { preventDefault: () => void; target: { email: { value: any; }; password: { value: any; }; }; }) => {
-      event.preventDefault();
+  // const EditForm = () => {
+  //   const handleSubmit = async (event: { preventDefault: () => void; target: { email: { value: any; }; password: { value: any; }; }; }) => {
+  //     event.preventDefault();
 
-      const email = event.target.email.value;
-      const password = event.target.password.value; // 获得信息
-      console.log(email, password);
+  //     const email = event.target.email.value;
+  //     const password = event.target.password.value; // 获得信息
+  //     console.log(email, password);
 
-      const userInfo = {
-        Email: email, // 存入json.
-        Password: password,
-      }
+  //     const userInfo = {
+  //       Email: email, // 存入json.
+  //       Password: password,
+  //     }
 
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/profile/`, {
-          method: "PUT",
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include',
-          body: JSON.stringify(userInfo)
-        });
-        const updatedUser = await response.json();
-        // setCurrUser(updatedUser);
-        setViewForm(false)
-        console.log('Success', updatedUser);
-      }
-      catch (err) {
-        console.error("Error:", err);
-      }
-    }
-
-    // return (
-    //   <form className="profileEditForm" onSubmit={handleSubmit}>
-    //     <label >Email:
-    //       <input type="text" name="firstname" />
-    //     </label>
-    //     <label className="profileEditLabel">Password:
-    //       <input type="text" name="lastname" />
-    //     </label>
-
-    //     <button className="profileEditButton2" type="submit"> Submit</button>
-    //     <button className="profileEditButton3" type="button" onClick={() => setViewForm(false)}> Cancel </button>
-    //   </form>
-    // )
-  }
+  //     try {
+  //       const response = await fetch(`${process.env.REACT_APP_API_URL}/profile/`, {
+  //         method: "PUT",
+  //         headers: {
+  //           'Content-Type': 'application/json'
+  //         },
+  //         credentials: 'include',
+  //         body: JSON.stringify(userInfo)
+  //       });
+  //       const updatedUser = await response.json();
+  //       // setCurrUser(updatedUser);
+  //       setViewForm(false)
+  //       console.log('Success', updatedUser);
+  //     }
+  //     catch (err) {
+  //       console.error("Error:", err);
+  //     }
+  //   }
+  // }
 
   
   return (
@@ -216,13 +265,13 @@ export default function Update() {
         >
           <div className={classes.paper}>
             <Typography component="h1" variant="h5">
-              User Profile
+              My Profile
             </Typography>
             <form className={classes.form} noValidate>
-              <div>{savedUsername}</div>
-              <div>123</div>
+              <div>My Username: {username}</div>
+              <div>My Email: {email}</div>
               {/* <div>{savedEmail}</div> */}
-              <TextField
+              {/* <TextField
                 onChange={(event) => handelAccount("email", event)}
                 variant="outlined"
                 margin="normal"
@@ -231,8 +280,8 @@ export default function Update() {
                 id="email"
                 label="Email"
                 name="email"
-                autoFocus />
-              <TextField
+                autoFocus /> */}
+              {/* <TextField
                 onChange={(event) => handelAccount("password", event)}
                 variant="outlined"
                 margin="normal"
@@ -242,7 +291,7 @@ export default function Update() {
                 label="Password"
                 type="password"
                 id="password"
-                autoComplete="current-password" />
+                autoComplete="current-password" /> */}
               {/* <FormControlLabel
       control={<Checkbox value="remember" color="primary" />}
       label="Remember me"
@@ -262,6 +311,7 @@ export default function Update() {
             </form>
           </div>
         </Grid>
+        <BasicUsage />
       </Grid></>
   );
 }
