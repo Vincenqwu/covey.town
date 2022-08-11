@@ -7,7 +7,8 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import addTownRoutes from './router/towns';
 import CoveyTownsStore from './lib/CoveyTownsStore';
-import router from './router/users';
+import userRouter from './router/users';
+import uploadRouter from './router/upload';
 import loadTownsFromDB from './townsLoader';
 
 
@@ -32,7 +33,8 @@ app.use(bodyParser.json());
 
 const server = http.createServer(app);
 
-app.use('/users', router);
+app.use('/users', userRouter);
+app.use('/upload', uploadRouter);
 addTownRoutes(server, app);
 
 server.listen(process.env.PORT || 8081, () => {
