@@ -9,6 +9,7 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:react/recommended',
   ],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     project: './tsconfig.json',
     tsconfigRootDir: __dirname,
