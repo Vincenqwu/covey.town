@@ -1,0 +1,189 @@
+.profile-container {
+  display: flex;
+  width: 90%;
+}
+
+.profile-details {
+  height: fit-content;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+  box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+  padding: 10px;
+  background-color: white;
+}
+
+.detailsTitle {
+  margin-bottom: 12px;
+}
+
+.profile-details-wrapper {
+  padding: 10px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+}
+
+.profile-title {
+  margin-bottom: 12px;
+}
+
+.profileUserImg {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  left: 0;
+  right: 0;
+  top: 150px;
+  border: 3px solid white;
+}
+
+.profile-info {
+  width: 90%;
+}
+
+.profileInfoName {
+  font-size: 24px;
+  margin-left: 0.5em;
+}
+
+.profileEditForm {
+  display: flex;
+  flex-direction: column;
+  width: 260%;
+}
+
+/* .profileFollowButton {
+  border-radius: 24px;
+  border: none;
+  padding: 6px;
+  background-color: green;
+  cursor: pointer;
+  color: white;
+  margin-left: 4em;
+
+}
+
+.profileFollowButton:hover {
+  background-color: red;
+} */
+
+/* .profileEditButton {
+  border-radius: 12px;
+  border: none;
+  padding: 6px;
+  background-color: green;
+  cursor: pointer;
+  color: white;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  width: 20px;
+} */
+
+.profileEditButton {
+  /* margin-left: 30px; */
+  width: 70px;
+  height: 35px;
+  font-size: 15px;
+  border: 1px solid #07709d;
+  border-radius: 5px;
+  padding: 3px;
+  margin-top: 15px;
+  /* float: right; */
+  background: #fefefe;
+  color: #07709d;
+  font-weight: 600;
+  font-style: italic;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.profileCancelButton {
+  margin-left: 30px;
+  width: 70px;
+  height: 35px;
+  font-size: 15px;
+  border: 1px solid #07709d;
+  border-radius: 5px;
+  padding: 3px;
+  margin-top: 15px;
+  float: right;
+  background: #fefefe;
+  color: #07709d;
+  font-weight: 600;
+  font-style: italic;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.profileSubmitButton {
+  margin-left: 30px;
+  width: 70px;
+  height: 35px;
+  font-size: 15px;
+  border: 1px solid #07709d;
+  border-radius: 5px;
+  padding: 3px;
+  margin-top: 15px;
+  float: right;
+  background: #fefefe;
+  color: #07709d;
+  font-weight: 600;
+  font-style: italic;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+/* .profileEditButton2 {
+  width: 50px;
+  font-size: 12px;
+  border-radius: 12px;
+  border: none;
+  padding: 6px;
+  background-color: green;
+  cursor: pointer;
+  color: white;
+  margin-top: 12px;
+}
+
+.profileEditButton3 {
+  width: 50px;
+  font-size: 12px;
+  border-radius: 12px;
+  border: none;
+  padding: 6px;
+  background-color: red;
+  cursor: pointer;
+  color: white;
+  margin-top: 8px;
+} */
+
+.formWrapper {
+  width: 8%;
+}
+
+.detailsInfoItem {
+  margin-bottom: 12px;
+}
+
+.profileEditLabel {
+  margin-top: 20px;
+}
+
+.leftbar {
+  height: calc(100vh - 60px);
+  top: 60px;
+  width: 200px;
+  left: 0;
+  position: sticky;
+}
+
+@media screen and (max-width: 480px) {
+  .profile-container {
+    display: block;
+    width: 100%;
+  }
+
+  .profile-info {
+    width: 100%;
+  }
+}
