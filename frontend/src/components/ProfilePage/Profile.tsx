@@ -28,6 +28,7 @@ import "./profile.css";
 
 
 
+
 // const theme = createTheme({
 //   typography: {
 //     fontFamily: [
@@ -137,12 +138,11 @@ export default function UserProfile() {
   const savedUsername = localStorage.getItem("username");
   const token = localStorage.getItem("x-access-token");
   const GETINFO_URL = `/users/${savedUsername}`;
-  const [user, setUser] = useState('');
-  const [emailAddress, setEmailAddress] = useState('');
+  // const [user, setUser] = useState('');
+  // const [emailAddress, setEmailAddress] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [viewForm, setViewForm] = useState(false);
-  const UPDATEURL = '/:username'
   
   const showUsername = async() => {
     try {
@@ -201,22 +201,44 @@ export default function UserProfile() {
       const [isChecked, setIsChecked] = useState(false);
       const savedPassword = localStorage.getItem("password");
       const [oldPwd, setOldPwd] = useState('');
-      const [newUsername, setNewUsername] = useState('');
+      const [newEmail, setNewEmail] = useState('');
       const [newPwd, setNewPwd] = useState('');
-      const UPDATE_URL = '/:username'
     
       useEffect(()=>{
+        
         if (savedPassword === oldPwd){
           setIsChecked(true);
+        } else {
+          setIsChecked(false);
         }
-    
-      }, [oldPwd, newUsername, newPwd]);
+        console.log(oldPwd);
+        console.log(savedPassword);
+        console.log(isChecked);
+        console.log(newEmail);
+        console.log(newPwd);
+      }, [oldPwd, newEmail, newPwd]);
     
       const handelSave = async(e: { preventDefault: () => void; })=>{
         e.preventDefault();
         if (isChecked === true) {
           console.log("do try catch");
+          try {
+            const response = await axios.put(
+              GETINFO_URL,
+              JSON.stringify({newPwd ,newEmail}),
+              {
+                headers: { 'Content-Type': 'application/json',
+               'x-access-token' : token},
+              }
+            );
+            console.log(response);
+          } catch (err) {
+            if (err instanceof Error) {
+              console.log(err.message);
+            }
+          }
         }
+        console.log(isChecked);
       }
     return (
       <form className="profileEditForm" >
@@ -239,10 +261,11 @@ export default function UserProfile() {
           margin="normal"
           required
           fullWidth
-          name="username"
-          label="New Username"
-          type="username"
+          name="email"
+          label="New Email"
+          type="email"
           id="username"
+          onChange={(e) => setNewEmail(e.target.value)}
           // autoComplete="current-username"
           // onChange={(e) => setUsername(e.target.value)}
            />
@@ -252,15 +275,16 @@ export default function UserProfile() {
           required
           fullWidth
           id="email"
-          label="New Email"
-          name="email"
-          autoFocus 
+          label="New Password"
+          name="password"
+          autoFocus
+          onChange={(e) => setNewPwd(e.target.value)} 
           // onChange={(e) => setEmail(e.target.value)}
           />
         {/* <label className="profileEditLabel" htmlFor="abc">Email:
           <input type="text" name="Email" />
         </label> */}
-        <button className="profileSubmitButton" type="submit"> Submit</button>
+        <button className="profileSubmitButton" type="submit" onClick={handelSave} > Submit</button>
         <button className="profileCancelButton" type="button" onClick={() => setViewForm(false)}> Cancel </button>
       </form>
     )
