@@ -126,6 +126,7 @@ export interface UserLoginRequest {
 }
 
 export interface UserUpdateRequest {
+  originalPassword: string;
   username: string;
   password: string;
   email: string;

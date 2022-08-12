@@ -136,6 +136,11 @@ userRouter.put('/:username', express.json(), verifyJWT, async (req, res) => {
     res.status(404).json('user not found');
     return;
   }
+  const validPassword = await bcrypt.compare(req.body.originalPassword, user?.password);
+  if (!validPassword) {
+    res.status(400).json('wrong password');
+    return;
+  }
   if (req.body.password) {
     try {
       const salt = await bcrypt.genSalt(10);
