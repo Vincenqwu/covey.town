@@ -5,3 +5,11 @@
   background-attachment: fixed;
   background-size: cover;
 }
+
+.logo {
+  position: absolute;
+  width: 157px;
+  height: 143px;
+  left: 1057px;
+  top: 16px;
+}
