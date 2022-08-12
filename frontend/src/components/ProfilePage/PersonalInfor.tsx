@@ -1,67 +1,3 @@
-// import TextField from "@material-ui/core/TextField";
-// import React, { useCallback } from "react";
-// // import TextField from "@mui/material/TextField";
-// import { useForm, Controller } from "react-hook-form";
-
-// import GetNewUserInfo from "./ContactModel";
-
-// import { GetNewPersonModel } from "./PersonModel";
-
-
-// const userInfo = GetNewUserInfo({
-//   person: GetNewPersonModel({
-//     nickName: "",
-//     email: ""
-//   }),
-// });
-
-// export default function Profile() {
-//   const formMethods = useForm({
-//     defaultValues: userInfo
-//   });
-
-//   const onSubmit = useCallback(() => {
-//     // console.log("on submit called");
-//   }, []);
-
-//   // console.log("render App");
-
-//   return (
-//     // <FormProvider {...}>
-//       <form onSubmit={formMethods.handleSubmit(onSubmit)}>
-//         <div id="home">
-//             <NavBar />
-//             <h1 className = "header-h1" >User Profile</h1>
-//         </div>
-//         <div>
-//           <h2>User Name</h2>
-//           <div>
-//             <Controller
-//               control={formMethods.control}
-//               name="person.nickName"
-//               render={() => <TextField label="NickName" />}
-//             />
-//           </div>
-//           <div>
-//           <Controller
-//             control={formMethods.control}
-//             name="person.email"
-//             render={() => <TextField label="EmailAddress" />}
-//           />
-//           </div>
-//           <div>
-//           <Controller
-//             control={formMethods.control}
-//             name="person.password"
-//             render={() => <TextField label="AccountPassword" />}
-//           />
-//           </div>
-//         </div>
-//       </form>
-//     // </FormProvider>
-//   );
-// }
-
 import React, { useEffect, useState } from "react";
 import {
   Modal,
@@ -83,11 +19,19 @@ import Paper from "@material-ui/core/Paper";
 // import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles,  ThemeProvider , createTheme } from "@material-ui/core/styles";
 // import { useParams } from "react-router";
 import axios from "../Welcome/api/axios"
 import NavBar from "./NavBar";
 
+
+// const theme = createTheme({
+//   typography: {
+//     fontFamily: [
+//       'Chilanka',
+//       'cursive',
+//     ].join(','),
+//   },});
 
 
 const useStyles = makeStyles((theme) => ({
@@ -112,7 +56,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center"
   },
-
   paper: {
     margin: theme.spacing(2, 6),
     display: "flex",
@@ -125,29 +68,93 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
   }
 }));
 
+function InitialFocus() {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const initialRef = React.useRef(null)
+  const finalRef = React.useRef(null)
+  const [isChecked, setIsChecked] = useState(false);
+  const savedPassword = localStorage.getItem("password");
+  const [oldPwd, setOldPwd] = useState('');
+  const [newUsername, setNewUsername] = useState('');
+  const [newPwd, setNewPwd] = useState('');
+
+  useEffect(()=>{
+    if (savedPassword === oldPwd){
+      setIsChecked(true);
+    }
+
+  }, [oldPwd, newUsername, newPwd]);
+
+  const handelSave = async(e: { preventDefault: () => void; })=>{
+    e.preventDefault();
+    if (isChecked === true) {
+      console.log("do try catch");
+    }
+  }
+
+  return (
+    <>
+      <Button onClick={onOpen}>Edit</Button>
+      {/* <Button ml={4} ref={finalRef}>
+        I will receive focus on close
+      </Button> */}
+
+      <Modal
+        initialFocusRef={initialRef}
+        finalFocusRef={finalRef}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create your account</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <FormControl>
+              <FormLabel>Old password</FormLabel>
+              <Input ref={initialRef} placeholder='Old password' />
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>New username or leave empty if no change</FormLabel>
+              <Input placeholder='New username' />
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>New password  or leave empty if no change</FormLabel>
+              <Input placeholder='New password' />
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3} onClick = {handelSave}>
+              Save
+            </Button>
+            <Button onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  )
+}
+
+
+
 // export default function SignIn(props: { history: string[]; }) {
 export default function Update() {
 
   const classes = useStyles();
 
-  // console.log(typeof classes.root);
-
-  // const [viewForm, setViewForm] = useState(false);
-
-
   const savedUsername = localStorage.getItem("username");
-  const savedPassword = localStorage.getItem("password");
   const token = localStorage.getItem("x-access-token");
-
   const GETINFO_URL = `/users/${savedUsername}`;
-
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   
@@ -166,131 +173,11 @@ export default function Update() {
     } catch (err) {
       console.log(err);
     }
-
   }
-  const [oldPwd, setOldPwd] = useState('');
-  const [newUsername, setNewUsername] = useState('');
-  const [newPwd, setNewPwd] = useState('');
 
-
-  
-
-  function InitialFocus() {
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    
-    const initialRef = React.useRef(null)
-    const finalRef = React.useRef(null)
-
-
-    const [isChecked, setIsChecked] = useState(false);
-
-    
-  
-    useEffect(()=>{
-      if (savedPassword === oldPwd){
-        setIsChecked(true);
-      }
-
-    }, [oldPwd, newUsername, newPwd]);
-
-    const handelSave = async(e: { preventDefault: () => void; })=>{
-      e.preventDefault();
-      if (isChecked === true) {
-        console.log("do try catch");
-      }
-    }
-
-  
-    return (
-      <>
-        <Button onClick={onOpen}>Edit</Button>
-        {/* <Button ml={4} ref={finalRef}>
-          I will receive focus on close
-        </Button> */}
-  
-        <Modal
-          initialFocusRef={initialRef}
-          finalFocusRef={finalRef}
-          isOpen={isOpen}
-          onClose={onClose}
-        >
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Create your account</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody pb={6}>
-              <FormControl>
-                <FormLabel>Old password</FormLabel>
-                <Input ref={initialRef} placeholder='Old password' />
-              </FormControl>
-  
-              <FormControl mt={4}>
-                <FormLabel>New username or leave empty if no change</FormLabel>
-                <Input placeholder='New username' />
-              </FormControl>
-
-              <FormControl mt={4}>
-                <FormLabel>New password  or leave empty if no change</FormLabel>
-                <Input placeholder='New password' />
-              </FormControl>
-            </ModalBody>
-  
-            <ModalFooter>
-              <Button colorScheme='blue' mr={3} onClick = {handelSave}>
-                Save
-              </Button>
-              <Button onClick={onClose}>Cancel</Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      </>
-    )
-  }
-  
   useEffect(()=>{
     showUsername();
   }, []);
-
-
-  // useEffect(()=>{
-  //   const result = ;
-    
-  //   setData(result);
-  // }, []);
-
-
-  // const EditForm = () => {
-  //   const handleSubmit = async (event: { preventDefault: () => void; target: { email: { value: any; }; password: { value: any; }; }; }) => {
-  //     event.preventDefault();
-
-  //     const email = event.target.email.value;
-  //     const password = event.target.password.value; // 获得信息
-  //     console.log(email, password);
-
-  //     const userInfo = {
-  //       Email: email, // 存入json.
-  //       Password: password,
-  //     }
-
-  //     try {
-  //       const response = await fetch(`${process.env.REACT_APP_API_URL}/profile/`, {
-  //         method: "PUT",
-  //         headers: {
-  //           'Content-Type': 'application/json'
-  //         },
-  //         credentials: 'include',
-  //         body: JSON.stringify(userInfo)
-  //       });
-  //       const updatedUser = await response.json();
-  //       // setCurrUser(updatedUser);
-  //       setViewForm(false)
-  //       console.log('Success', updatedUser);
-  //     }
-  //     catch (err) {
-  //       console.error("Error:", err);
-  //     }
-  //   }
-  // }
 
   
   return (
@@ -314,10 +201,10 @@ export default function Update() {
               My Profile
             </Typography>
             <form className={classes.form} noValidate>
-              <div>My Username: {username}</div>
-              <div>My Email: {email}</div>
-              {/* <div>{savedEmail}</div> */}
-              {/* <TextField
+              <Typography component="h3"> My Username:  {username} </Typography>
+              <Typography component="h3"> My Email:  {email} </Typography>
+              {/* <div>{savedEmail}</div>
+              <TextField
                 onChange={(event) => handelAccount("email", event)}
                 variant="outlined"
                 margin="normal"
@@ -326,8 +213,8 @@ export default function Update() {
                 id="email"
                 label="Email"
                 name="email"
-                autoFocus /> */}
-              {/* <TextField
+                autoFocus />
+              <TextField
                 onChange={(event) => handelAccount("password", event)}
                 variant="outlined"
                 margin="normal"
@@ -337,25 +224,16 @@ export default function Update() {
                 label="Password"
                 type="password"
                 id="password"
-                autoComplete="current-password" /> */}
-              {/* <FormControlLabel
-      control={<Checkbox value="remember" color="primary" />}
-      label="Remember me"
-    /> */}
-              {/* <Button
-                type="submit"
-                
+                autoComplete="current-password" />
+              <Button
+                type="submit"    
                 variant="contained"
                 color="primary"
-                className={classes.submit}
-              >
+                className={classes.submit}>
                 Edit
               </Button> */}
-              {/* <Box mt={5}>
-                <Copyright />
-              </Box> */}
-              <InitialFocus />
             </form>
+            <InitialFocus />
           </div>
         </Grid>
         
