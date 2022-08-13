@@ -38,6 +38,7 @@ import PlayerMovementContext, { PlayerMovementCallback } from './contexts/Player
 import PlayersInTownContext from './contexts/PlayersInTownContext';
 import VideoContext from './contexts/VideoContext';
 import { CoveyAppState } from './CoveyTypes';
+import NavBar from './NavBar';
 // import Update from './components/ProfilePage/PersonalInfor';
 
 export const MOVEMENT_UPDATE_DELAY_MS = 0;
@@ -337,6 +338,7 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
               <PlayersInTownContext.Provider value={playersInTown}>
                 <NearbyPlayersContext.Provider value={nearbyPlayers}>
                   <ConversationAreasContext.Provider value={conversationAreas}>
+                    <NavBar />
                     {page}
                   </ConversationAreasContext.Provider>
                 </NearbyPlayersContext.Provider>

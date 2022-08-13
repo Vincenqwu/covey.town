@@ -198,34 +198,18 @@ export default function UserProfile() {
     //   }
 
     function EditForm() {
-      const [isChecked, setIsChecked] = useState(false);
-      const savedPassword = localStorage.getItem("password");
       const [oldPwd, setOldPwd] = useState('');
       const [newEmail, setNewEmail] = useState('');
       const [newPwd, setNewPwd] = useState('');
     
-      useEffect(()=>{
-        
-        if (savedPassword === oldPwd){
-          setIsChecked(true);
-        } else {
-          setIsChecked(false);
-        }
-        console.log(oldPwd);
-        console.log(savedPassword);
-        console.log(isChecked);
-        console.log(newEmail);
-        console.log(newPwd);
-      }, [oldPwd, newEmail, newPwd]);
     
       const handelSave = async(e: { preventDefault: () => void; })=>{
         e.preventDefault();
-        if (isChecked === true) {
           console.log("do try catch");
           try {
             const response = await axios.put(
               GETINFO_URL,
-              JSON.stringify({newPwd ,newEmail}),
+              JSON.stringify({password: newPwd , email : newEmail}),
               {
                 headers: { 'Content-Type': 'application/json',
                'x-access-token' : token},
@@ -237,8 +221,6 @@ export default function UserProfile() {
               console.log(err.message);
             }
           }
-        }
-        console.log(isChecked);
       }
     return (
       <form className="profileEditForm" >

@@ -2,6 +2,7 @@ import "./NavBar.css";
 import React from 'react';
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
+import { handleLogout } from "../../NavBar";
 
 
 const NavBar = () => (
@@ -26,10 +27,10 @@ const NavBar = () => (
         <div className="bannerRight">
           <div className="bannerLoginLogout">
             {/* <a href={`${process.env.REACT_APP_TOWNS_SERVICE_URL}/signin`}> */}
-            <a href= 'http://localhost:3000/signin'>
+            <a href= './signin'>
             <button className="btn-delete-account" type="submit">Delete Account</button> 
-            <button className="btn-loginout" type="submit">Log Out</button>
-          </a>   
+            <button className="btn-loginout" type="submit" onClick = {handleLogout}>Log Out</button>
+          </a>  
           </div>
         </div>
       </div>
