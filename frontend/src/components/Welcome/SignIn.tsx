@@ -91,38 +91,15 @@ export default function SignIn() {
   const [token, setToken] = useState('');
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState(false);
-  const [isChecked, setIsChecked] = useState('false');
-
-  const savedUsername = localStorage.getItem("username");
-  const savedPassword = localStorage.getItem("password");
-  const saveedIsChecked = localStorage.getItem("ischecked");
 
   useEffect(() => {
     setErrMsg('');
   }, [user, pwd]);
 
   useEffect(() => {
-    if (saveedIsChecked === "true" && savedUsername !== null) {
-      setUser(savedUsername);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (saveedIsChecked === "true" && savedPassword !== null) {
-      setPwd(savedPassword);
-    }
-  }, []);
-
-  const handleCheckBox = (event: { target: { checked: any; }; }) => {
-    setIsChecked(event.target.checked);
-  };
-
-  useEffect(() => {
     if (success === true) {
       localStorage.setItem("username", user);
-      localStorage.setItem("password", pwd);
       localStorage.setItem("x-access-token", token);
-      localStorage.setItem("ischecked", isChecked);
     }
   }, [success, setSuccess]);
 
@@ -237,10 +214,6 @@ export default function SignIn() {
                     id="password"
                     value = {pwd}
                     autoComplete="current-password"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox value="remember" color="primary" onChange={handleCheckBox}/>}
-                    label="Remember me"
                   />
                   <Button
                     type="submit"
