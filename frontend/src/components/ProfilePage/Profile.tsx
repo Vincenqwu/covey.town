@@ -1,20 +1,6 @@
 /* eslint-disable no-lone-blocks */
 import React, { useEffect, useState } from "react";
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  Button,
-  useDisclosure,
-  FormControl,
-  FormLabel,
-  Input,
-} from '@chakra-ui/react';
-import CssBaseline from "@material-ui/core/CssBaseline";
+import {Button} from '@chakra-ui/react';
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 // import Box from "@material-ui/core/Box";
@@ -25,8 +11,6 @@ import { makeStyles,  ThemeProvider , createTheme } from "@material-ui/core/styl
 import axios from "../Welcome/api/axios";
 import NavBar from "./NavBar";
 import "./profile.css";
-
-
 
 
 // const theme = createTheme({
@@ -44,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     // backgroundImage: `url(${image})`,
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
-    // backgroundSize: "cover",
+    backgroundSize: "cover",
     backgroundColor:
       theme.palette.type === "light"
         ? theme.palette.grey[50]
@@ -53,93 +37,16 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "left",
     justifyContent: "center"
   },
-  
 }));
 
-// function EditForm() {
-//   const { isOpen, onOpen, onClose } = useDisclosure()
-//   const initialRef = React.useRef(null)
-//   const finalRef = React.useRef(null)
-//   const [isChecked, setIsChecked] = useState(false);
-//   const savedPassword = localStorage.getItem("password");
-//   const [oldPwd, setOldPwd] = useState('');
-//   const [newUsername, setNewUsername] = useState('');
-//   const [newPwd, setNewPwd] = useState('');
 
-//   useEffect(()=>{
-//     if (savedPassword === oldPwd){
-//       setIsChecked(true);
-//     }
-
-//   }, [oldPwd, newUsername, newPwd]);
-
-//   const handelSave = async(e: { preventDefault: () => void; })=>{
-//     e.preventDefault();
-//     if (isChecked === true) {
-//       console.log("do try catch");
-//     }
-//   }
-
-  // return (
-  //   <>
-  //     <button className = "profileEditButton" onClick={onOpen} type="submit">Edit</button>
-  //     <div>
-      {/* <Modal> */}
-        {/* initialFocusRef={initialRef}
-        finalFocusRef={finalRef} */}
-        {/* isOpen={isOpen}
-        onClose={onClose} */}
-        {/* <ModalOverlay /> */}
-        {/* <ModalContent>
-          <ModalHeader>Create your account</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            <FormControl>
-              <FormLabel>Old password</FormLabel>
-              <Input ref={initialRef} placeholder='Old password' />
-            </FormControl>
-
-            <FormControl mt={4}>
-              <FormLabel>New username or leave empty if no change</FormLabel>
-              <Input placeholder='New username' />
-            </FormControl>
-
-            <FormControl mt={4}>
-              <FormLabel>New password  or leave empty if no change</FormLabel>
-              <Input placeholder='New password' />
-            </FormControl>
-
-            <button onClick = {handelSave} type='submit'>
-              Save
-            </button>
-            <button onClick={onClose} type='submit'>Cancel</button>
-          </ModalBody>
-        </ModalContent> */}
-      //   <form className="profileEditForm" >
-      //     <label htmlFor="profileEditLabel"> User Name:
-      //       <input type="text" name="firstname" />
-      //     </label>
-      //     <label htmlFor="profileEditLabel">Email:
-      //       <input type="text" name="lastname" />
-      //     </label>
-      //   <button className="profileSubmitButton" type="submit"> Submit</button>
-      //   <button className="profileCancelButton" type="button" onClick={onClose}> Cancel </button>
-      // </form>
-      {/* </Modal> */}
-      // </div>
-    // </>
-  // ）
-      // }
-
-
-// export default function SignIn(props: { history: string[]; }) {
 export default function UserProfile() {
   const classes = useStyles();
   const savedUsername = localStorage.getItem("username");
   const token = localStorage.getItem("x-access-token");
   const GETINFO_URL = `/users/${savedUsername}`;
-  // const [user, setUser] = useState('');
-  // const [emailAddress, setEmailAddress] = useState('');
+
+  const [savedPwd, setSavedPwd] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [viewForm, setViewForm] = useState(false);
@@ -155,6 +62,7 @@ export default function UserProfile() {
       );
       setUsername(response.data.username);
       setEmail(response.data.email);
+      setSavedPwd(localStorage.getItem('password')!); 
 
     } catch (err) {
       console.log(err);
@@ -165,47 +73,51 @@ export default function UserProfile() {
     showUsername();
   }, []);
 
-
-  // const EditForm = () => {
-  //   const handleSubmit = async (event: { preventDefault: () => void; username: { value: string; }; email: { value: string; }; password: { value: string; }; }) => {
-  //     event.preventDefault();
-  //     // const newUsername = event.username.value;
-  //     const newUsername = "abc";
-  //     const newEmail = event.email.value;
-  //     const newPassword = event.password.value; // 获得信息
-  //     console.log(newUsername, newEmail, newPassword);
-  //     const UPDATE_URL = '/:username'
-
-  //     const userInfo = {
-  //       username: newUsername, // 存入json.
-  //       email: newEmail,
-  //     }
-    //   try {
-    //     const response = await fetch(`${process.env.REACT_APP_TOWNS_SERVICE_URL}/:username`, {
-    //       method: "PUT",
-    //       headers: {
-    //         'Content-Type': 'application/json'
-    //       },
-    //       credentials: 'include',
-    //       body: JSON.stringify(userInfo)
-    //     });
-    //     const updatedUser = await response.json();
-    //     // setCurrUser(updatedUser);
-    //     setViewForm(false)
-    //     console.log('Success', updatedUser);
-    //     setUsername('');
-		// 	  setEmail('');
-    //   }
-
     function EditForm() {
       const [oldPwd, setOldPwd] = useState('');
       const [newEmail, setNewEmail] = useState('');
       const [newPwd, setNewPwd] = useState('');
+      const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+      const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      const [validEmail, setValidEmail] = useState(false);
+      const [validPwd, setValidPwd] = useState(false);
+      const [errMsg, setErrMsg] = useState('');
+      const [success, setSuccess] = useState(false);
+      const [isChecked, setIsChecked] = useState(false);
+
+      useEffect(()=>{
+        if (savedPwd === oldPwd){
+          setIsChecked(true);
+        }
+      },[oldPwd])
+  
+      useEffect(() => {
+        setValidEmail(EMAIL_REGEX.test(newEmail));
+      }, [newEmail]);
+    
+      useEffect(() => {
+        setValidPwd(PWD_REGEX.test(newPwd));
+      }, [newPwd]);
+    
+      useEffect(() => {
+        setErrMsg('');
+      }, [newEmail, newPwd]);
     
     
       const handelSave = async(e: { preventDefault: () => void; })=>{
         e.preventDefault();
           console.log("do try catch");
+
+          const v1 = EMAIL_REGEX.test(newEmail);
+          const v2 = PWD_REGEX.test(newPwd);
+          if (!v1 || !v2) {
+            setErrMsg(' Invalid new Email or new Password !');
+            return;
+          }
+          if(!isChecked){
+            setErrMsg(' Incorrect Previous Password !!');
+            return;
+          }
           try {
             const response = await axios.put(
               GETINFO_URL,
@@ -216,6 +128,7 @@ export default function UserProfile() {
               }
             );
             console.log(response);
+            console.log('123');
           } catch (err) {
             if (err instanceof Error) {
               console.log(err.message);
@@ -248,8 +161,6 @@ export default function UserProfile() {
           type="email"
           id="username"
           onChange={(e) => setNewEmail(e.target.value)}
-          // autoComplete="current-username"
-          // onChange={(e) => setUsername(e.target.value)}
            />
         <TextField
           variant="outlined"
@@ -261,13 +172,21 @@ export default function UserProfile() {
           name="password"
           autoFocus
           onChange={(e) => setNewPwd(e.target.value)} 
-          // onChange={(e) => setEmail(e.target.value)}
           />
         {/* <label className="profileEditLabel" htmlFor="abc">Email:
           <input type="text" name="Email" />
         </label> */}
         <button className="profileSubmitButton" type="submit" onClick={handelSave} > Submit</button>
         <button className="profileCancelButton" type="button" onClick={() => setViewForm(false)}> Cancel </button>
+        <p
+            style = {{
+              fontSize: '1.2rem',
+              color: 'purple',
+              width: 300,
+            }}
+					>
+					    {errMsg}   
+					</p>
       </form>
     )
   }
@@ -278,76 +197,22 @@ export default function UserProfile() {
       <NavBar />
     </div><Grid container component="main" className={classes.root}>
         <div className="profile-container">
-          {/* <leftBar/> */}
-          {/* <CssBaseline /> */}
-          {/* <Grid item xs={false} sm={4} md={7} className={classes.image} /> */}
-          {/* <Grid
-            className={classes.size}
-            item
-            xs={12}
-            sm={10}
-            md={5}
-            component={Paper}
-          > */}
-            {/* <div className={classes.paper}> */}
-            <div className="profile-info">
-            <div className="profile-details">
-              <h1 className="detailsTitle" > My Profile </h1>
-              <div className="detailsInfo">
-                  <h3 className="detailsInfoKey"> Username: {username} </h3>
-              </div>
-              <div className="detailsInfo">
-                  <h3 className="detailsInfoKey"> Email: {email} </h3>
-              </div>
-              <Button className="profileEditButton" type="submit" onClick={() => setViewForm(true)}>Edit</Button>
-              <div className="formWrapper">
-                {viewForm ?
-                  <EditForm /> : ''}
-              </div>
+          <div className="profile-info">
+          <div className="profile-details">
+            <h1 className="detailsTitle" > My Profile </h1>
+            <div className="detailsInfo">
+                <h3 className="detailsInfoKey"> Username: {username} </h3>
             </div>
+            <div className="detailsInfo">
+                <h3 className="detailsInfoKey"> Email: {email} </h3>
             </div>
-            {/* <Typography component="h1" variant="h5">
-              My Profile
-            </Typography>
-            <Typography component="h3"> My Username: {username} </Typography>
-            <Typography component="h3"> My Email: {email} </Typography> */}
-            {/* <EditForm /> */}
-            {/* <form className={classes.form} noValidate>
-              <Typography component="h3"> My Username:  {username} </Typography>
-              <Typography component="h3"> My Email:  {email} </Typography>
-              <EditForm /> */}
-                    {/* <div>{savedEmail}</div>
-            <TextField
-              onChange={(event) => handelAccount("email", event)}
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              autoFocus />
-            <TextField
-              onChange={(event) => handelAccount("password", event)}
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password" />
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              className={classes.submit}>
-              Edit
-            </Button> */}
-            {/* </form> */}
-            {/* </div> */}
-          {/* </Grid> */}
+            <Button className="profileEditButton" type="submit" onClick={() => setViewForm(true)}>Edit</Button>
+            <div className="formWrapper">
+              {viewForm ?
+                <EditForm /> : ''}
+            </div>
+          </div>
+          </div>   
         </div>
       </Grid></>
       );
