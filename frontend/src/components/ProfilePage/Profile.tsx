@@ -180,7 +180,7 @@ export default function UserProfile() {
         {/* <label className="profileEditLabel" htmlFor="abc">Email:
           <input type="text" name="Email" />
         </label> */}
-        <button className="profileSubmitButton" type="submit" onClick={handelSave} > Submit</button>
+        <button className="profileSubmitButton" type="submit" onClick={handleSave} > Submit</button>
         <button className="profileCancelButton" type="button" onClick={() => setViewForm(false)}> Cancel </button>
         <p
             style = {{
