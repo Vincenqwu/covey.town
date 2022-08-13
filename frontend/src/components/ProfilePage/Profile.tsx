@@ -11,7 +11,9 @@ import { makeStyles,  ThemeProvider , createTheme } from "@material-ui/core/styl
 import axios from "../Welcome/api/axios";
 import NavBar from "./NavBar";
 import "./profile.css";
-
+import townPerson from './img/townPerson.png';
+import townImg from './img/CoveyTown.png';
+import fadebg from './img/60fade.png';
 
 // const theme = createTheme({
 //   typography: {
@@ -24,9 +26,10 @@ import "./profile.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: "50vh",
-    // backgroundImage: `url(${image})`,
-    backgroundRepeat: "no-repeat",
+    height: "90vh",
+    backgroundImage: `url(${townImg})`,
+    // backgroundImage: `url(${fadebg})`,
+    // backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
     backgroundSize: "cover",
     backgroundColor:
@@ -46,9 +49,9 @@ export default function UserProfile() {
   const token = localStorage.getItem("x-access-token");
   const GETINFO_URL = `/users/${savedUsername}`;
 
-  const [savedPwd, setSavedPwd] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [viewForm, setViewForm] = useState(false);
   
   const showUsername = async() => {
@@ -62,7 +65,7 @@ export default function UserProfile() {
       );
       setUsername(response.data.username);
       setEmail(response.data.email);
-      setSavedPwd(localStorage.getItem('password')!); 
+      setPassword(response.data.password);
 
     } catch (err) {
       console.log(err);
@@ -82,14 +85,6 @@ export default function UserProfile() {
       const [validEmail, setValidEmail] = useState(false);
       const [validPwd, setValidPwd] = useState(false);
       const [errMsg, setErrMsg] = useState('');
-      const [success, setSuccess] = useState(false);
-      const [isChecked, setIsChecked] = useState(false);
-
-      useEffect(()=>{
-        if (savedPwd === oldPwd){
-          setIsChecked(true);
-        }
-      },[oldPwd])
   
       useEffect(() => {
         setValidEmail(EMAIL_REGEX.test(newEmail));
@@ -104,31 +99,34 @@ export default function UserProfile() {
       }, [newEmail, newPwd]);
     
     
-      const handelSave = async(e: { preventDefault: () => void; })=>{
+      const handleSave = async(e: { preventDefault: () => void; })=>{
         e.preventDefault();
           console.log("do try catch");
 
           const v1 = EMAIL_REGEX.test(newEmail);
           const v2 = PWD_REGEX.test(newPwd);
-          if (!v1 || !v2) {
-            setErrMsg(' Invalid new Email or new Password !');
+          if (!v1){
+            setErrMsg('Invalid new Email!');
             return;
           }
-          if(!isChecked){
-            setErrMsg(' Incorrect Previous Password !!');
+          if (!v2) {
+            setErrMsg(' Invalid new Password! Password must include uppercase and lowercase letters, a number and a special character.');
             return;
           }
+
           try {
             const response = await axios.put(
               GETINFO_URL,
-              JSON.stringify({password: newPwd , email : newEmail}),
+              JSON.stringify({originalPassword: oldPwd, password: newPwd , email : newEmail}),
               {
                 headers: { 'Content-Type': 'application/json',
                'x-access-token' : token},
               }
             );
-            console.log(response);
-            console.log('123');
+            
+            setEmail(newEmail);
+            setPassword(newPwd);
+            setViewForm(false)
           } catch (err) {
             if (err instanceof Error) {
               console.log(err.message);
@@ -136,7 +134,7 @@ export default function UserProfile() {
           }
       }
     return (
-      <form className="profileEditForm" >
+      <form className="profileEditForm" onSubmit={handleSave}>
         {/* <label className="profileEditLabel" htmlFor="abc"> User Name:
           <input type="text" name="udername" />
         </label> */}
@@ -149,6 +147,7 @@ export default function UserProfile() {
           label="Old Password"
           name="oldpwd"
           autoFocus 
+          autoComplete="current-password"
           onChange={(e) => setOldPwd(e.target.value)}
           />
         <TextField
@@ -159,7 +158,7 @@ export default function UserProfile() {
           name="email"
           label="New Email"
           type="email"
-          id="username"
+          id="email"
           onChange={(e) => setNewEmail(e.target.value)}
            />
         <TextField
@@ -170,13 +169,14 @@ export default function UserProfile() {
           id="email"
           label="New Password"
           name="password"
+          type="password"
           autoFocus
           onChange={(e) => setNewPwd(e.target.value)} 
           />
         {/* <label className="profileEditLabel" htmlFor="abc">Email:
           <input type="text" name="Email" />
         </label> */}
-        <button className="profileSubmitButton" type="submit" onClick={handelSave} > Submit</button>
+        <button className="profileSubmitButton" type="submit"> Submit</button>
         <button className="profileCancelButton" type="button" onClick={() => setViewForm(false)}> Cancel </button>
         <p
             style = {{
@@ -196,10 +196,17 @@ export default function UserProfile() {
     <><div>
       <NavBar />
     </div><Grid container component="main" className={classes.root}>
-        <div className="profile-container">
+        {/* <div className="profile-container"> */}
           <div className="profile-info">
           <div className="profile-details">
             <h1 className="detailsTitle" > My Profile </h1>
+            <div className="profile-header">
+            <img
+              className="profileUserImg"
+              src={townPerson}
+              alt="user profile img"
+            />
+            </div>
             <div className="detailsInfo">
                 <h3 className="detailsInfoKey"> Username: {username} </h3>
             </div>
@@ -213,7 +220,7 @@ export default function UserProfile() {
             </div>
           </div>
           </div>   
-        </div>
+        {/* </div> */}
       </Grid></>
       );
   }
