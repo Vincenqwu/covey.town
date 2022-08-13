@@ -66,6 +66,7 @@ export default function UserProfile() {
       setUsername(response.data.username);
       setEmail(response.data.email);
       setPassword(response.data.password);
+      console.log(response.data);
 
     } catch (err) {
       console.log(err);
