@@ -96,7 +96,7 @@ userRouter.delete('/:username', express.json(), verifyJWT, async (req, res) => {
 });
 
 // get a user's info by username
-userRouter.get('/:username',  express.json(), verifyJWT, async (req, res) => {
+userRouter.get('/:username', express.json(), verifyJWT, async (req, res) => {
   try {
     const user = await User.findOne({
       username: req.params.username,
@@ -113,7 +113,7 @@ userRouter.get('/:username',  express.json(), verifyJWT, async (req, res) => {
 
 
 // get all the towns created by the user by username
-userRouter.get('/:username/towns',  express.json(), verifyJWT, async (req, res) => {
+userRouter.get('/:username/towns', express.json(), verifyJWT, async (req, res) => {
   try {
     const user = await User.findOne({ username: req.params.username });
     if (!user) {
@@ -129,22 +129,27 @@ userRouter.get('/:username/towns',  express.json(), verifyJWT, async (req, res) 
 
 // update user's profile information
 userRouter.put('/:username', express.json(), verifyJWT, async (req, res) => {
-  const user = await User.findOne({
-    username: req.params.username,
-  });
-  if (!user) {
-    res.status(404).json('user not found');
-    return;
-  }
-  if (req.body.password) {
-    try {
-      const salt = await bcrypt.genSalt(10);
-      req.body.password = await bcrypt.hash(req.body.password, salt);
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  }
   try {
+    const user = await User.findOne({
+      username: req.params.username,
+    });
+    if (!user) {
+      res.status(404).json('user not found');
+      return;
+    }
+    const validPassword = await bcrypt.compare(req.body.originalPassword, user?.password);
+    if (!validPassword) {
+      res.status(400).json('wrong password');
+      return;
+    }
+    if (req.body.password) {
+      try {
+        const salt = await bcrypt.genSalt(10);
+        req.body.password = await bcrypt.hash(req.body.password, salt);
+      } catch (err) {
+        res.status(500).json(err);
+      }
+    }
     await User.updateOne(
       { username: req.params.username },
       {

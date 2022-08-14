@@ -2,6 +2,7 @@ import assert from 'assert';
 import CORS from 'cors';
 import Express, { Request, Response, NextFunction } from 'express';
 import http from 'http';
+import bcrypt from 'bcrypt';
 import { nanoid } from 'nanoid';
 import { AddressInfo } from 'net';
 import addTownRoutes from '../router/towns';
@@ -187,8 +188,9 @@ describe('UserServiceAPIREST', () => {
     it('User is updated successfully', async () => {
       let res = await apiClient.updateUser(
         {
+          originalPassword: 'testuser5',
           username: 'testuser5',
-          password: '',
+          password: 'updatedtestuser5',
           email: 'updatedtest5@gmail.com',
         },
         {
@@ -207,6 +209,8 @@ describe('UserServiceAPIREST', () => {
         },
       );
       expect(res.data.email).toBe('updatedtest5@gmail.com');
+      const isPasswordCorrect = await bcrypt.compare('updatedtestuser5', res.data.password)
+      expect(isPasswordCorrect).toBe(true);
     });
     it('User is deleted successfully', async () => {
       const res = await apiClient.deleteUser(
