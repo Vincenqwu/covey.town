@@ -13,8 +13,6 @@ export default function Routers(){
             <Route path="/signup" component={SignUp} />
             <Route path="/welcome" component={App} />
             <Route path="/profile" component={Profile} />
-
-
         </Switch>
     )
 }
