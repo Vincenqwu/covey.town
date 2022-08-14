@@ -1,4 +1,4 @@
-/* eslint-disable no-lone-blocks */
+
 import React, { useEffect, useState } from "react";
 import {Button} from '@chakra-ui/react';
 import TextField from "@material-ui/core/TextField";
@@ -8,6 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles,  ThemeProvider , createTheme } from "@material-ui/core/styles";
 // import { useParams } from "react-router";
+
 import axios from "../Welcome/api/axios";
 import NavBar from "./NavBar";
 import "./profile.css";
@@ -124,13 +125,15 @@ export default function UserProfile() {
                'x-access-token' : token},
               }
             );
-            
             setEmail(newEmail);
             setPassword(newPwd);
             setViewForm(false)
           } catch (err) {
             if (err instanceof Error) {
               console.log(err.message);
+              if (err.message === "Request failed with status code 400") {
+                setErrMsg(' Incorrect Old Password!');
+              }
             }
           }
       }
@@ -192,7 +195,22 @@ export default function UserProfile() {
     )
   }
   
+
+// // 弹窗
+//   const deleteConfirm =(id) =>{
+//     if(window.confirm('Are you sure you want to delete this account?')){
+//       console.log('sure')
+//       return true
+//     }
+//     console.log('cancel')
+//     return false
+//     }
   
+
+
+
+
+
   return (
     <><div>
       <NavBar />
