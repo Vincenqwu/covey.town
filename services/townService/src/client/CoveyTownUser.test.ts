@@ -209,7 +209,7 @@ describe('UserServiceAPIREST', () => {
         },
       );
       expect(res.data.email).toBe('updatedtest5@gmail.com');
-      const isPasswordCorrect = await bcrypt.compare('updatedtestuser5', res.data.password)
+      const isPasswordCorrect = await bcrypt.compare('updatedtestuser5', res.data.password);
       expect(isPasswordCorrect).toBe(true);
     });
     it('User is deleted successfully', async () => {

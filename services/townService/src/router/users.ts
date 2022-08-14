@@ -85,11 +85,14 @@ userRouter.delete('/:username', express.json(), verifyJWT, async (req, res) => {
       await User.deleteOne({
         _id: user._id,
       });
+      res.status(200).json({
+        message: 'User deleted',
+        username: req.params.username,
+      });
+    } else {
+      res.status(404).json('user not found');
     }
-    res.status(200).json({
-      message: 'User deleted',
-      username: req.params.username,
-    });
+
   } catch (err) {
     res.status(500).json(err);
   }
@@ -143,12 +146,8 @@ userRouter.put('/:username', express.json(), verifyJWT, async (req, res) => {
       return;
     }
     if (req.body.password) {
-      try {
-        const salt = await bcrypt.genSalt(10);
-        req.body.password = await bcrypt.hash(req.body.password, salt);
-      } catch (err) {
-        res.status(500).json(err);
-      }
+      const salt = await bcrypt.genSalt(10);
+      req.body.password = await bcrypt.hash(req.body.password, salt);
     }
     await User.updateOne(
       { username: req.params.username },
