@@ -194,21 +194,6 @@ export default function UserProfile() {
       </form>
     )
   }
-  
-
-// // 弹窗
-//   const deleteConfirm =(id) =>{
-//     if(window.confirm('Are you sure you want to delete this account?')){
-//       console.log('sure')
-//       return true
-//     }
-//     console.log('cancel')
-//     return false
-//     }
-  
-
-
-
 
 
   return (

@@ -1,5 +1,5 @@
 import "./NavBar.css";
-import React from 'react';
+import React, { useState } from 'react';
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
 import axios from "../Welcome/api/axios";
@@ -8,8 +8,8 @@ import { handleLogout } from "../../NavBar";
 
 
 async function handleDelete() {
-  const DELETE_URL = '/users/:username/';
   const userName = localStorage.getItem("username");
+  const DELETE_URL = `/users/${userName}`;
   const token = localStorage.getItem("x-access-token");
 
   try{
@@ -27,13 +27,15 @@ async function handleDelete() {
   }
 }
 
-const deleteConfirm = () =>{
-  if(window.confirm('Are you sure you want to delete this account? \nYou will lose all the information on your account, and it is not retrievable.')){
+
+const deleteConfirm = () => {
+  if(window.confirm('Are you sure you want to delete this account? \nYou will lose all the information on your account, and it is not retrievable!')){
     console.log('sure')
-    handleDelete();
+    window.location.href = `./signin`;
+    return handleDelete();
   }
-  console.log('cancel')
-  return false
+    console.log('cancel');
+    return false;
 }
 
 
@@ -45,7 +47,7 @@ const NavBar = () => (
           <Link to="/welcome" style={{ textDecoration: "none" }}>
             <span aria-label="Instabook Logo click to home page" className="logo">CoveyTown</span>
           </Link>
-        </div>
+          </div>
         <div className="bannerRight">
           <div className="bannerLoginLogout">
             {/* <a href={`${process.env.REACT_APP_TOWNS_SERVICE_URL}/signin`}> */}
