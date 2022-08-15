@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Table, TableCaption, Thead, Tr, Th, Tbody, Td} from "@chakra-ui/react";
+import { Box, Table, TableCaption, Thead, Tr, Th, Tbody, Td, Button} from "@chakra-ui/react";
 import axios from "../Welcome/api/axios";
 import { CoveyTownInfoForUser } from '../../classes/TownsServiceClient';
 
@@ -26,6 +26,7 @@ export default function TownRecord(Props: { username: any; token : any; }){
             setCurrentCreatedTowns(currentTowns);
             } catch (err) {
                 if (err instanceof Error) {
+                    console.log("town record");
                     console.log(err.message);
                 }
             }
@@ -35,17 +36,49 @@ export default function TownRecord(Props: { username: any; token : any; }){
         getCreatedTowns();
     }, [username, currentCreatedTowns, setCurrentCreatedTowns]);
 
+    
+    const handleDelete = async(townID: any, townPassword: any) => {
+        const DELETETOWN_URL = `/towns/${townID}/${townPassword}`;
+        try {
+            const response = await axios.delete(
+                DELETETOWN_URL,
+                {
+                headers: { 'Content-Type': 'application/json', 
+                'x-access-token':  token},
+                }
+            );
+            console.log(response);
+            } catch (err) {
+                if (err instanceof Error) {
+                    console.log("town delete");
+                    console.log(err.message);
+                }
+            }
+    }
+
+    const deleteConfirm = (townID: any, townPassword: any) => {
+        if(window.confirm(`Are you sure you want to delete the town ${townID}? \nYou will lose all the information about this town, and it is not retrievable!`)){
+          console.log('sure')
+        //   window.location.href = `./signin`;
+          return handleDelete(townID, townPassword);
+        }
+          console.log('cancel');
+          return false;
+      }
+
     return (
             <Box maxH="500px" overflowY="scroll">
                 <Table variant='striped' colorScheme='teal'>
                     <TableCaption placement="bottom">User Created Towns</TableCaption>
-                        <Thead><Tr><Th>Town Name</Th><Th>Town ID</Th><Th>Town Password</Th></Tr></Thead>
+                        <Thead><Tr><Th>Town Name</Th><Th>Town ID</Th><Th>Town Password</Th><Th>Activity</Th></Tr></Thead>
                         <Tbody>
                             {currentCreatedTowns?.map((town) => (
                             <Tr key={town.coveyTownId}><Td role='cell'>{town.friendlyName}</Td><Td
                                 role='cell'>{town.coveyTownId}</Td>
                                 <Td role='cell'>{town.townUpdatePassword}
                                 </Td>
+                                <Td role='cell'>
+                                    <Button onClick={() => deleteConfirm(town.coveyTownId, town.townUpdatePassword)}>Delete</Button></Td>
                             </Tr>
                             ))}
                         </Tbody>
@@ -53,3 +86,4 @@ export default function TownRecord(Props: { username: any; token : any; }){
             </Box>
          )   
 }
+
