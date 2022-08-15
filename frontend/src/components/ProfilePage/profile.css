@@ -177,6 +177,33 @@
   position: sticky;
 }
 
+.selectImgButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.uploadButton, .cancelButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+}
+
+.uploadButton {
+  background-color: green;
+  color: white;
+  margin-bottom: 3px;
+}
+
+.cancelButton {
+  background-color: red;
+  color: white;
+}
+
 @media screen and (max-width: 480px) {
   .profile-container {
     display: block;
