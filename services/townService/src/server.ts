@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
 app.use(bodyParser.json());
-
+app.use("/public", Express.static("public"));
 const server = http.createServer(app);
 
 app.use('/users', userRouter);

@@ -160,4 +160,27 @@ userRouter.put('/:username', express.json(), verifyJWT, async (req, res) => {
   }
 });
 
+// Upload user's prifile image url
+userRouter.put('/image/:username', express.json(), verifyJWT, async (req, res) => {
+  try {
+    const user = await User.findOne({
+      username: req.params.username,
+    });
+    if (!user) {
+      res.status(404).json('user not found');
+      return;
+    }
+    await User.updateOne(
+      { username: req.params.username },
+      {
+        $set: {
+          profilePictureUrl: req.body.profilePictureUrl,
+        }
+      });
+    res.status(200).json('profile has been updated');
+  } catch (err) {
+    res.status(500).json(err);
+  }
+})
+
 export default userRouter;
