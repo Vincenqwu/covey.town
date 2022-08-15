@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Table, TableCaption, Thead, Tr, Th, Tbody, Td, ChakraProvider } from "@chakra-ui/react";
+import { Box, Table, TableCaption, Thead, Tr, Th, Tbody, Td} from "@chakra-ui/react";
 import axios from "../Welcome/api/axios";
 import { CoveyTownInfoForUser } from '../../classes/TownsServiceClient';
 
-
+/**
+ * This is the Town Record Component for showing the list of the current user's created towns.
+ * @param Props has two params: username and token
+ * @returns a html object
+ */
 export default function TownRecord(Props: { username: any; token : any; }){
     const {username} = Props;
     const {token} = Props;
@@ -47,5 +51,5 @@ export default function TownRecord(Props: { username: any; token : any; }){
                         </Tbody>
                 </Table>
             </Box>
-    )
+         )   
 }
