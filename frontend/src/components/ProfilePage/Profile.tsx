@@ -1,9 +1,7 @@
 
 import React, { useEffect, useState, ChangeEvent } from "react";
-import { Button } from '@chakra-ui/react';
+import { Button, ChakraProvider, Heading } from '@chakra-ui/react';
 import TextField from "@material-ui/core/TextField";
-import Paper from "@material-ui/core/Paper";
-// import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, ThemeProvider, createTheme } from "@material-ui/core/styles";
@@ -15,23 +13,13 @@ import NavBar from "./NavBar";
 import "./profile.css";
 import townPerson from './img/townPerson.png';
 import townImg from './img/CoveyTown.png';
-import fadebg from './img/60fade.png';
-
-// const theme = createTheme({
-//   typography: {
-//     fontFamily: [
-//       'Chilanka',
-//       'cursive',
-//     ].join(','),
-//   },});
+import TownRecord from "./TownRecord";
 
 
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "90vh",
     backgroundImage: `url(${townImg})`,
-    // backgroundImage: `url(${fadebg})`,
-    // backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
     backgroundSize: "cover",
     backgroundColor:
@@ -41,10 +29,14 @@ const useStyles = makeStyles((theme) => ({
     display: "center",
     alignItems: "left",
     justifyContent: "center"
+
   },
 }));
 
-
+/**
+ * This is the user profile page component
+ * @returns a html object
+ */
 export default function UserProfile() {
   const classes = useStyles();
   const savedUsername = localStorage.getItem("username");
@@ -86,6 +78,9 @@ export default function UserProfile() {
     showUsername();
   }, []);
 
+  /**
+   * This is a foldable form which allow user to edit the Email or password.
+   */
   function EditForm() {
     const [oldPwd, setOldPwd] = useState('');
     const [newEmail, setNewEmail] = useState('');
@@ -99,23 +94,21 @@ export default function UserProfile() {
     useEffect(() => {
       setValidEmail(EMAIL_REGEX.test(newEmail));
     }, [newEmail]);
-
+  
     useEffect(() => {
       setValidPwd(PWD_REGEX.test(newPwd));
     }, [newPwd]);
-
+  
     useEffect(() => {
       setErrMsg('');
     }, [newEmail, newPwd]);
-
-
-    const handleSave = async (e: { preventDefault: () => void; }) => {
+  
+  
+    const handleSave = async(e: { preventDefault: () => void; })=>{
       e.preventDefault();
-      console.log("do try catch");
-
       const v1 = EMAIL_REGEX.test(newEmail);
       const v2 = PWD_REGEX.test(newPwd);
-      if (!v1) {
+      if (!v1){
         setErrMsg('Invalid new Email!');
         return;
       }
@@ -127,12 +120,10 @@ export default function UserProfile() {
       try {
         const response = await axios.put(
           GETINFO_URL,
-          JSON.stringify({ originalPassword: oldPwd, password: newPwd, email: newEmail }),
+          JSON.stringify({originalPassword: oldPwd, password: newPwd , email : newEmail}),
           {
-            headers: {
-              'Content-Type': 'application/json',
-              'x-access-token': token
-            },
+            headers: { 'Content-Type': 'application/json',
+            'x-access-token' : token},
           }
         );
         setEmail(newEmail);
@@ -147,11 +138,9 @@ export default function UserProfile() {
         }
       }
     }
+
     return (
       <form className="profileEditForm" onSubmit={handleSave}>
-        {/* <label className="profileEditLabel" htmlFor="abc"> User Name:
-          <input type="text" name="udername" />
-        </label> */}
         <TextField
           variant="outlined"
           margin="normal"
@@ -187,9 +176,6 @@ export default function UserProfile() {
           autoFocus
           onChange={(e) => setNewPwd(e.target.value)}
         />
-        {/* <label className="profileEditLabel" htmlFor="abc">Email:
-          <input type="text" name="Email" />
-        </label> */}
         <button className="profileSubmitButton" type="submit" onClick={handleSave} > Submit</button>
         <button className="profileCancelButton" type="button" onClick={() => setViewForm(false)}> Cancel </button>
         <p
@@ -205,6 +191,7 @@ export default function UserProfile() {
     )
   }
 
+  
 
   const uploadHandler = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -257,7 +244,7 @@ export default function UserProfile() {
         {/* <div className="profile-container"> */}
         <div className="profile-info">
           <div className="profile-details">
-            <h1 className="detailsTitle" > My Profile </h1>
+            <h1 className="detailsTitle"> My Profile </h1>
             <div className="profile-header">
               {(() => {
                 if (file) {
@@ -265,25 +252,22 @@ export default function UserProfile() {
                     <img
                       className="profileUserImg"
                       src={URL.createObjectURL(file)}
-                      alt="new profile img preview"
-                    />
-                  )
+                      alt="new profile img preview" />
+                  );
                 } if (profileImg) {
                   return (
                     <img
                       className="profileUserImg"
                       src={`${process.env.REACT_APP_TOWNS_SERVICE_URL}/public/images/${profileImg}`}
-                      alt="user profile img"
-                    />
-                  )
+                      alt="user profile img" />
+                  );
                 }
                 return (
                   <img
                     className="profileUserImg"
                     src={townPerson}
-                    alt="default profile img"
-                  />
-                )
+                    alt="default profile img" />
+                );
               })()}
 
               <form className="uploadImage" onSubmit={uploadHandler}>
@@ -304,8 +288,7 @@ export default function UserProfile() {
                       if (files) {
                         setFile(files[0]);
                       }
-                    }}
-                  />
+                    } } />
                 </label>
                 {file && <div className="uploadCancelGroup">
                   <button className="uploadButton" type="submit">Upload</button>
