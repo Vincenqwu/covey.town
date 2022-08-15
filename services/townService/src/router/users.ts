@@ -175,12 +175,12 @@ userRouter.put('/image/:username', express.json(), verifyJWT, async (req, res) =
       {
         $set: {
           profilePictureUrl: req.body.profilePictureUrl,
-        }
+        },
       });
     res.status(200).json('profile has been updated');
   } catch (err) {
     res.status(500).json(err);
   }
-})
+});
 
 export default userRouter;
