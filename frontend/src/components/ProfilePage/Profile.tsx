@@ -91,21 +91,21 @@ export default function UserProfile() {
     useEffect(() => {
       setValidEmail(EMAIL_REGEX.test(newEmail));
     }, [newEmail]);
-  
+
     useEffect(() => {
       setValidPwd(PWD_REGEX.test(newPwd));
     }, [newPwd]);
-  
+
     useEffect(() => {
       setErrMsg('');
     }, [newEmail, newPwd]);
-  
-  
-    const handleSave = async(e: { preventDefault: () => void; })=>{
+
+
+    const handleSave = async (e: { preventDefault: () => void; }) => {
       e.preventDefault();
       const v1 = EMAIL_REGEX.test(newEmail);
       const v2 = PWD_REGEX.test(newPwd);
-      if (!v1){
+      if (!v1) {
         setErrMsg('Invalid new Email!');
         return;
       }
@@ -117,10 +117,12 @@ export default function UserProfile() {
       try {
         const response = await axios.put(
           GETINFO_URL,
-          JSON.stringify({originalPassword: oldPwd, password: newPwd , email : newEmail}),
+          JSON.stringify({ originalPassword: oldPwd, password: newPwd, email: newEmail }),
           {
-            headers: { 'Content-Type': 'application/json',
-            'x-access-token' : token},
+            headers: {
+              'Content-Type': 'application/json',
+              'x-access-token': token
+            },
           }
         );
         setEmail(newEmail);
@@ -188,7 +190,7 @@ export default function UserProfile() {
     )
   }
 
-  
+
 
   const uploadHandler = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -224,6 +226,7 @@ export default function UserProfile() {
             },
           }
         )
+        window.location.reload();
       }
       else {
         console.log("file not found");
@@ -239,82 +242,82 @@ export default function UserProfile() {
       <NavBar />
       <Grid container component="main" className={classes.root}>
         <div className="profile-container">
-        <div className="profile-info">
-          <div className="profile-details">
-            <Heading as='h3' size='lg' className="detailsTitle"> My Profile </Heading>
-            <div className="profile-header">
-              {(() => {
-                if (file) {
+          <div className="profile-info">
+            <div className="profile-details">
+              <Heading as='h3' size='lg' className="detailsTitle"> My Profile </Heading>
+              <div className="profile-header">
+                {(() => {
+                  if (file) {
+                    return (
+                      <img
+                        className="profileUserImg"
+                        src={URL.createObjectURL(file)}
+                        alt="new profile img preview" />
+                    );
+                  } if (profileImg) {
+                    return (
+                      <img
+                        className="profileUserImg"
+                        src={`${process.env.REACT_APP_TOWNS_SERVICE_URL}/public/images/${profileImg}`}
+                        alt="user profile img" />
+                    );
+                  }
                   return (
                     <img
                       className="profileUserImg"
-                      src={URL.createObjectURL(file)}
-                      alt="new profile img preview" />
+                      src={townPerson}
+                      alt="default profile img" />
                   );
-                } if (profileImg) {
-                  return (
-                    <img
-                      className="profileUserImg"
-                      src={`${process.env.REACT_APP_TOWNS_SERVICE_URL}/public/images/${profileImg}`}
-                      alt="user profile img" />
-                  );
-                }
-                return (
-                  <img
-                    className="profileUserImg"
-                    src={townPerson}
-                    alt="default profile img" />
-                );
-              })()}
+                })()}
 
-              <form className="uploadImage" onSubmit={uploadHandler}>
-                <label htmlFor="file" className="uploadOption">
-                  {!file && (
-                    <div className="selectImgButton">
-                      <AddPhotoAlternateIcon htmlColor="tomato" className="shareIcon" />
-                      <span className="uploadOptionText">Add Profile Image</span>
-                    </div>
-                  )}
-                  <input
-                    style={{ display: "none" }}
-                    type="file"
-                    id="file"
-                    accept=".png,.jpeg,.jpg"
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      const { files } = e.target;
-                      if (files) {
-                        setFile(files[0]);
-                      }
-                    } } />
-                </label>
-                {file && <div className="uploadCancelGroup">
-                  <button className="uploadButton" type="submit">Upload</button>
-                  <button className="cancelButton" type="button" onClick={() => setFile(null)}> Cancel </button>
-                </div>}
-              </form>
+                <form className="uploadImage" onSubmit={uploadHandler}>
+                  <label htmlFor="file" className="uploadOption">
+                    {!file && (
+                      <div className="selectImgButton">
+                        <AddPhotoAlternateIcon htmlColor="tomato" className="shareIcon" />
+                        <span className="uploadOptionText">Add Profile Image</span>
+                      </div>
+                    )}
+                    <input
+                      style={{ display: "none" }}
+                      type="file"
+                      id="file"
+                      accept=".png,.jpeg,.jpg"
+                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        const { files } = e.target;
+                        if (files) {
+                          setFile(files[0]);
+                        }
+                      }} />
+                  </label>
+                  {file && <div className="uploadCancelGroup">
+                    <button className="uploadButton" type="submit">Upload</button>
+                    <button className="cancelButton" type="button" onClick={() => setFile(null)}> Cancel </button>
+                  </div>}
+                </form>
 
+              </div>
+              <div className="detailsInfo">
+                <Heading as='h5' size='sm' className="detailsTitle"> Username: {username} </Heading>
+              </div>
+              <div className="detailsInfo">
+                <Heading as='h5' size='sm' className="detailsTitle"> Email: {email} </Heading>
+              </div>
+              <Button className="profileEditButton" type="submit" onClick={() => setViewForm(true)}>Edit</Button>
+              <div className="formWrapper">
+                {viewForm ?
+                  <EditForm /> : ''}
+              </div>
             </div>
-            <div className="detailsInfo">
-              <Heading as='h5' size='sm' className="detailsTitle"> Username: {username} </Heading>
-            </div>
-            <div className="detailsInfo">
-              <Heading as='h5' size='sm' className="detailsTitle"> Email: {email} </Heading>
-            </div>
-            <Button className="profileEditButton" type="submit" onClick={() => setViewForm(true)}>Edit</Button>
-            <div className="formWrapper">
-              {viewForm ?
-                <EditForm /> : ''}
-            </div>
-          </div>
-            <div className="profile-details"> 
+            <div className="profile-details">
               <Heading as='h3' size='lg' className="detailsTitle">My Record</Heading>
               <Heading as='h5' size='sm' className="detailsTitle">My Created Towns</Heading>
-              <TownRecord username = {username} token = {token} />
+              <TownRecord username={username} token={token} />
             </div>
           </div>
         </div>
 
       </Grid>
-      </ChakraProvider>
+    </ChakraProvider>
   );
 }
