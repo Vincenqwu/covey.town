@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, ChangeEvent } from "react";
 import { Button, ChakraProvider, Heading } from '@chakra-ui/react';
 import TextField from "@material-ui/core/TextField";
@@ -6,8 +5,6 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, ThemeProvider, createTheme } from "@material-ui/core/styles";
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
-// import { useParams } from "react-router";
-
 import axios from "../Welcome/api/axios";
 import NavBar from "./NavBar";
 import "./profile.css";
@@ -238,13 +235,13 @@ export default function UserProfile() {
 
 
   return (
-    <><div>
+    <ChakraProvider>
       <NavBar />
-    </div><Grid container component="main" className={classes.root}>
-        {/* <div className="profile-container"> */}
+      <Grid container component="main" className={classes.root}>
+        <div className="profile-container">
         <div className="profile-info">
           <div className="profile-details">
-            <h1 className="detailsTitle"> My Profile </h1>
+            <Heading as='h3' size='lg' className="detailsTitle"> My Profile </Heading>
             <div className="profile-header">
               {(() => {
                 if (file) {
@@ -298,10 +295,10 @@ export default function UserProfile() {
 
             </div>
             <div className="detailsInfo">
-              <h3 className="detailsInfoKey"> Username: {username} </h3>
+              <Heading as='h5' size='sm' className="detailsTitle"> Username: {username} </Heading>
             </div>
             <div className="detailsInfo">
-              <h3 className="detailsInfoKey"> Email: {email} </h3>
+              <Heading as='h5' size='sm' className="detailsTitle"> Email: {email} </Heading>
             </div>
             <Button className="profileEditButton" type="submit" onClick={() => setViewForm(true)}>Edit</Button>
             <div className="formWrapper">
@@ -309,8 +306,15 @@ export default function UserProfile() {
                 <EditForm /> : ''}
             </div>
           </div>
+            <div className="profile-details"> 
+              <Heading as='h3' size='lg' className="detailsTitle">My Record</Heading>
+              <Heading as='h5' size='sm' className="detailsTitle">My Created Towns</Heading>
+              <TownRecord username = {username} token = {token} />
+            </div>
+          </div>
         </div>
-        {/* </div> */}
-      </Grid></>
+
+      </Grid>
+      </ChakraProvider>
   );
 }
