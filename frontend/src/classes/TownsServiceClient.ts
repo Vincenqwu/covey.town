@@ -108,6 +108,19 @@ export type CoveyTownInfo = {
   maximumOccupancy: number
 };
 
+export type CoveyTownInfoForUser = {
+  _id: string,
+  coveyTownId: string,
+  userId: string,
+  townUpdatePassword: string,
+  isPublic: boolean,
+  friendlyName: string,
+  capacity: number,
+  createdAt: string,
+  updatedAt: string,
+  __v: number;
+};
+
 export interface RequestHeader {
   'x-access-token': string;
 }
@@ -208,8 +221,6 @@ export default class TownsServiceClient {
     const responseWrapper = await this._axios.get(`/users/${username}`, requestConfig);
     return responseWrapper;
   }
-
-  // async listUserTowns(request)
 
   async userValidateJWT(requestConfig: RequestConfig) : Promise<any>{
     const responseWrapper = await this._axios.get('/users/validate', requestConfig);
