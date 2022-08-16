@@ -183,4 +183,19 @@ userRouter.put('/image/:username', express.json(), verifyJWT, async (req, res) =
   }
 });
 
+// Get user's last visited town
+userRouter.get('/:username/town/latest', express.json(), verifyJWT, async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username });
+    if (!user) {
+      res.status(404).json('user not found');
+      return;
+    }
+    const lastTown = await Town.findOne({ coveyTownId: user.lastVisitedTownId });
+    res.status(200).json(lastTown);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 export default userRouter;

@@ -71,6 +71,19 @@ describe('UserServiceAPIREST', () => {
     return ret;
   }
 
+  async function joinSessionForTesting(token: string, username: string, nickname: string, townID: string): Promise<any> {
+    const ret = await apiClient.joinTown({
+      userName: nickname,
+      coveyTownID: townID,
+      accountUsername: username,
+    }, {
+      headers: {
+        'x-access-token': token,
+      },
+    });
+    return ret;
+  }
+
   beforeAll(async () => {
     await dbHandler.connect();
 
@@ -242,6 +255,16 @@ describe('UserServiceAPIREST', () => {
       const town = await Town.find({ userId: user?._id });
       expect(town.length).toBe(1);
       expect(town[0].userId).toBe(user?._id.toString());
+    });
+    it('User record shows last visited town id', async () => {
+      let user = await User.findOne({ username: 'testuser6' });
+      const town = await Town.find({ userId: user?._id });
+      await joinSessionForTesting(token, 'testuser6', 'nickname6', town[0].coveyTownId);
+      user = await User.findOne({ username: 'testuser6' });
+      expect(town.length).toBe(1);
+      expect(town[0].userId).toBe(user?._id.toString());
+      expect(user?.lastVisitedTownId).toBe(town[0].coveyTownId);
+
     });
   });
 

@@ -26,6 +26,14 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
         userName: req.body.userName,
         coveyTownID: req.body.coveyTownID,
       });
+      if (result.isOK) {
+        await User.updateOne(
+          { username: req.body.accountUsername },
+          { $set: {
+            lastVisitedTownId: req.body.coveyTownID,
+          } },
+        );
+      }
       res.status(StatusCodes.OK)
         .json(result);
     } catch (err) {
