@@ -42,7 +42,8 @@
 }
 
 .profile-info {
-  width: 90%;
+  width: 100%;
+  margin-top: 5px;
 }
 
 .profileInfoName {
@@ -162,6 +163,10 @@
   color: white;
   margin-left: 5px;
   margin-right: 5px;
+}
+
+.loadingStatus {
+  margin-left: 5px;
 }
 
 .cancelButton {
