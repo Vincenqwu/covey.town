@@ -68,7 +68,7 @@ export default function TownRecord(Props: { username: any; token : any; }){
 
     return (
             <Box maxH="500px" overflowY="scroll">
-                <Table variant='striped' colorScheme='teal'>
+                <Table variant='striped' colorScheme='blue'>
                     <TableCaption placement="bottom">User Created Towns</TableCaption>
                         <Thead><Tr><Th>Town Name</Th><Th>Town ID</Th><Th>Town Password</Th><Th>Activity</Th></Tr></Thead>
                         <Tbody>

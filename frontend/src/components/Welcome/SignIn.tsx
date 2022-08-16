@@ -14,7 +14,6 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
 import image from "./Images/image.jpg";
-import logo from "./Images/logo.png";
 import axios from './api/axios';
 
 
@@ -78,15 +77,6 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
-  },
-  logo: {
-    maxWidth: 160,
-  },
-  topright: {
-    top: theme.spacing(1),
-    right: theme.spacing(16),
-    height: "100vh",
-    backgroundImage: `url(${logo})`,
   }
 }));
 
@@ -191,6 +181,7 @@ export default function SignIn() {
                     backgroundColor: 'red',
                   }}
                   aria-live="assertive"
+                  data-testid = "errmsg"
                 >
                   {errMsg}
                 </p>
@@ -221,6 +212,7 @@ export default function SignIn() {
                     fullWidth
                     name="password"
                     label="Password"
+                    title = "password"
                     type="password"
                     id="password"
                     value = {pwd}
@@ -228,6 +220,7 @@ export default function SignIn() {
                   />
                   <Button
                     type="submit"
+                    name="submit"
                     fullWidth
                     variant="contained"
                     color="primary"
