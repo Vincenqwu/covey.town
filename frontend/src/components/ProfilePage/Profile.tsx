@@ -39,7 +39,6 @@ export default function UserProfile() {
   const savedUsername = localStorage.getItem("username");
   const token = localStorage.getItem("x-access-token");
   const GETINFO_URL = `/users/${savedUsername}`;
-
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -47,7 +46,6 @@ export default function UserProfile() {
   const [file, setFile] = useState<File | null>();
   const [profileImg, setProfileImg] = useState('');
 
-  console.log(process.env)
   const showUsername = async () => {
     try {
       const response = await axios.get(
@@ -259,7 +257,7 @@ export default function UserProfile() {
                     return (
                       <img
                         className="profileUserImg"
-                        src={`${process.env.AWS_SERVICE_URL}/${profileImg}`}
+                        src={`${process.env.REACT_APP_AWS_SERVICE_URL}/${profileImg}`}
                         alt="user profile img" />
                     );
                   }
