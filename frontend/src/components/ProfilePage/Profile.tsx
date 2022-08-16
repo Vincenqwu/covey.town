@@ -47,6 +47,7 @@ export default function UserProfile() {
   const [viewForm, setViewForm] = useState(false);
   const [file, setFile] = useState<File | null>();
   const [profileImg, setProfileImg] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
 
   const showUsername = async () => {
     try {
@@ -202,6 +203,7 @@ export default function UserProfile() {
         fileName = fileName.replace(/\s/g, '_');
         data.append("name", fileName);
         data.append("file", file);
+        setIsUploading(true);
         await axios.post(
           UPLOAD_URL,
           data,
@@ -227,6 +229,7 @@ export default function UserProfile() {
             },
           }
         )
+        setIsUploading(false);
         window.location.reload();
       }
       else {
@@ -295,6 +298,7 @@ export default function UserProfile() {
                   {file && <div className="uploadCancelGroup">
                     <button className="uploadButton" type="submit">Upload</button>
                     <button className="cancelButton" type="button" onClick={() => setFile(null)}> Cancel </button>
+                    {isUploading ? <p className="loadingStatus">uploading..</p> : null}
                   </div>}
                 </form>
 
