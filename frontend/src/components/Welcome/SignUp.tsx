@@ -184,6 +184,7 @@ export default function SignUp() {
               backgroundColor: 'red',
 
             }}
+            data-testid = "errmsg"
 					>
 					    {errMsg}   
 					</p>
@@ -214,7 +215,7 @@ export default function SignUp() {
                 <h4 style = {{
                   fontSize: '1.5 rem',
                   color: 'red',
-                }}>
+                }} data-testid = "errmsg_username">
                   4 to 24 characters.
                   <br />
                   Must begin with a letter.
@@ -230,6 +231,7 @@ export default function SignUp() {
                   id="email"
                   label="Email Address"
                   name="email"
+                  title="email"
                   autoComplete="email"
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -237,7 +239,9 @@ export default function SignUp() {
                 <h4 style = {{
                   fontSize: '1.5 rem',
                   color: 'red',
-                }}>
+                }} 
+                data-testid = "errmsg_email"
+                title = "errmsg_email">
                   Need a valid email.
 						    </h4>}
               </Grid>
@@ -249,6 +253,7 @@ export default function SignUp() {
                   name="password"
                   label="Password"
                   type="password"
+                  title="password"
                   id="password"
                   autoComplete="current-password"
                   onChange={(e) => setPwd(e.target.value)}
@@ -257,7 +262,8 @@ export default function SignUp() {
                 <h4 style = {{
                   fontSize: '1.5 rem',
                   color: 'red',
-                }}>
+                }} data-testid = "errmsg_password"
+                title = "errmsg_password">
                   8 to 24 characters.
                   <br />
                   Must include uppercase and lowercase letters, a number and a

@@ -12,7 +12,6 @@ describe("SignIn", () => {
   let userNameTextField: HTMLInputElement;
   let passWordTextField: HTMLInputElement;
   let signInButton: HTMLElement;
-  // let errMsg: HTMLElement; 
 
   
   beforeEach(() => {
