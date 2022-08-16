@@ -1,11 +1,11 @@
 import React from "react";
-import { RenderResult, waitFor } from "@testing-library/react";
-import { render, screen } from "@testing-library/react";
-import SignUp from "./SignUp";
+import { RenderResult, waitFor , render, screen } from "@testing-library/react";
+import { nanoid } from "nanoid";
 import  userEvent from "@testing-library/user-event";
+import SignUp from "./SignUp";
 import "@testing-library/jest-dom/extend-expect";
 import '@testing-library/jest-dom'
-import { nanoid } from "nanoid";
+
 
 
 describe("SignUp", () => {

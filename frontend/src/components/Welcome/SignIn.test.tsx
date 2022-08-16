@@ -1,8 +1,7 @@
 import React from "react";
-import { RenderResult, waitFor } from "@testing-library/react";
-import { render, screen } from "@testing-library/react";
-import SignIn from "./SignIn";
+import { RenderResult, waitFor , render, screen } from "@testing-library/react";
 import  userEvent from "@testing-library/user-event";
+import SignIn from "./SignIn";
 import "@testing-library/jest-dom/extend-expect";
 import '@testing-library/jest-dom'
 
