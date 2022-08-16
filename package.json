@@ -54,5 +54,17 @@
         "ramda": "^0.27.1",
         "react": "^17.0.2",
         "typescript-is": "^0.17.0"
-    }
+    },
+    "jest": {
+        "transformIgnorePatterns": [
+          "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base)"
+        ],
+        "moduleNameMapper": {
+          "\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/mocks/fileMock.js",
+          "\\.(css|less)$": "<rootDir>/mocks/fileMock.js"
+        },
+        "transform": {
+          ".+\\.(css|scss|png|jpg|svg)$": "jest-transform-stub"
+        }
+      }
 }
