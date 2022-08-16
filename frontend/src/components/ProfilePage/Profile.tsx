@@ -313,7 +313,7 @@ export default function UserProfile() {
             </div>
             <div className="profile-details">
               <Heading as='h3' size='lg' className="detailsTitle">My Record</Heading>
-              <Heading as='h5' size='sm' className="detailsTitle">My Created Towns</Heading>
+              
               <TownRecord username={username} token={token} />
             </div>
           </div>
