@@ -58,7 +58,6 @@ export default function TownRecord(Props: { username: any; token : any; }){
 
     useEffect(()=>{
         getCreatedTowns();
-        // getLastVisitedTown();
     }, [username, currentCreatedTowns, lastVisitedTown]);
 
     useEffect(()=>{
@@ -76,7 +75,6 @@ export default function TownRecord(Props: { username: any; token : any; }){
                 'x-access-token':  token},
                 }
             );
-            console.log(response);
             } catch (err) {
                 if (err instanceof Error) {
                     console.log("town delete");
@@ -87,11 +85,8 @@ export default function TownRecord(Props: { username: any; token : any; }){
 
     const deleteConfirm = (townID: any, townPassword: any) => {
         if(window.confirm(`Are you sure you want to delete the town ${townID}? \nYou will lose all the information about this town, and it is not retrievable!`)){
-          console.log('sure')
-        //   window.location.href = `./signin`;
           return handleDelete(townID, townPassword);
         }
-          console.log('cancel');
           return false;
       }
 
@@ -131,22 +126,6 @@ export default function TownRecord(Props: { username: any; token : any; }){
                         )
                     }
                 </div>
-                {/* <Table variant='striped' colorScheme='blue'>
-                    <TableCaption placement="bottom">User Created Towns</TableCaption>
-                        <Thead><Tr><Th>Town Name</Th><Th>Town ID</Th><Th>Town Password</Th><Th>Public/Private</Th><Th>Activity</Th></Tr></Thead>
-                        <Tbody>
-                            {currentCreatedTowns?.map((town) => (
-                            <Tr key={town.coveyTownId}><Td role='cell'>{town.friendlyName}</Td><Td
-                                role='cell'>{town.coveyTownId}</Td>
-                                <Td role='cell'>{town.townUpdatePassword}
-                                </Td>
-                                {renderPublicOrNot(town.isPublic)}
-                                <Td role='cell'>
-                                    <Button onClick={() => deleteConfirm(town.coveyTownId, town.townUpdatePassword)}>Delete</Button></Td>
-                            </Tr>
-                            ))}
-                        </Tbody>
-                </Table> */}
                 <Heading as='h5' size='sm' className="detailsTitle">My Last Visited Town</Heading>
                 <div>
                    {

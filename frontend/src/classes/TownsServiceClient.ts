@@ -11,9 +11,7 @@ export interface TownJoinRequest {
   userName: string;
   /** ID of the town that the player would like to join * */
   coveyTownID: string;
-  /**
-   * 
-   */
+  /** the account username of the current player */
   accountUsername?: string;
 }
 

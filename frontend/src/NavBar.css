@@ -52,17 +52,6 @@
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-/* .btn-loginout {
-  width: 60px;
-  height: 25px;
-  font-size: 14px;
-  background: white;
-  color:black;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-} */
-
 .btn-update {
   margin-left: 30px;
   margin-right: 30px;
@@ -81,17 +70,6 @@
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-/* .logo {
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  margin-left: 60px;
-  margin-right: auto;
-  font-style: italic;
-  font-weight: bold;
-  align-items: center;
-  line-height: 55px;
-  font-size: 50px;
-} */
-
 .logo {
   font-size: 36px;
   margin-left: 22px;
@@ -104,10 +82,6 @@
 .bannerLeft {
   flex: 2;
 }
-
-/* .bannerMiddle {
-  flex: 3;
-} */
 
 .bannerRight {
   flex: 2;

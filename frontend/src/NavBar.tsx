@@ -12,9 +12,7 @@ export function handleLogout() {
 const NavBar = () => (
       <div className="bannerContainer">
         <div className="bannerLeft">
-          <Link to="/welcome" style={{ textDecoration: "none" }}>
-            <span aria-label="Instabook Logo click to home page" className="logo">CoveyTown</span>
-          </Link>
+            <span aria-label="Logo click to home page" className="logo">CoveyTown</span>
         </div>
         <div className="bannerRight">
           <div className="bannerLoginLogout">

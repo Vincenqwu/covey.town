@@ -301,7 +301,6 @@ export default function UserProfile() {
                     {isUploading ? <p className="loadingStatus">uploading..</p> : null}
                   </div>}
                 </form>
-
               </div>
               <div className="detailsInfo">
                 <Heading as='h5' size='sm' className="detailsTitle"> Username: {username} </Heading>
@@ -317,12 +316,10 @@ export default function UserProfile() {
             </div>
             <div className="profile-details">
               <Heading as='h3' size='lg' className="detailsTitle">My Record</Heading>
-              
               <TownRecord username={username} token={token} />
             </div>
           </div>
         </div>
-
       </Grid>
     </ChakraProvider>
   );
