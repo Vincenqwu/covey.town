@@ -39,7 +39,8 @@ export default function UserProfile() {
   const savedUsername = localStorage.getItem("username");
   const token = localStorage.getItem("x-access-token");
   const GETINFO_URL = `/users/${savedUsername}`;
-
+  const UPLOAD_URL = `/upload`;
+  const PROFILEURL_URL = `/users/image/${savedUsername}`;
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -202,7 +203,7 @@ export default function UserProfile() {
         data.append("name", fileName);
         data.append("file", file);
         await axios.post(
-          `${process.env.REACT_APP_TOWNS_SERVICE_URL}/upload`,
+          UPLOAD_URL,
           data,
           {
             headers: {
@@ -217,7 +218,7 @@ export default function UserProfile() {
         });
         // Update user with image url
         await axios.put(
-          `${process.env.REACT_APP_TOWNS_SERVICE_URL}/users/image/${savedUsername}`,
+          PROFILEURL_URL,
           JSON.stringify({ profilePictureUrl: fileName }),
           {
             headers: {
@@ -255,10 +256,11 @@ export default function UserProfile() {
                         alt="new profile img preview" />
                     );
                   } if (profileImg) {
+                    console.log(`${process.env.REACT_APP_AWS_SERVICE_URL}/${profileImg}`)
                     return (
                       <img
                         className="profileUserImg"
-                        src={`${process.env.REACT_APP_TOWNS_SERVICE_URL}/public/images/${profileImg}`}
+                        src={`${process.env.REACT_APP_AWS_SERVICE_URL}/${profileImg}`}
                         alt="user profile img" />
                     );
                   }

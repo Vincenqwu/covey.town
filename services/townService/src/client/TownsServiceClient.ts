@@ -26,10 +26,12 @@ export type ServerConversationArea = {
  * The format of a request to join a Town in Covey.Town, as dispatched by the server middleware
  */
 export interface TownJoinRequest {
-  /** userName of the player that would like to join * */
+  /** nickname of the player that would like to join * */
   userName: string;
   /** ID of the town that the player would like to join * */
   coveyTownID: string;
+  /** username of registered user */
+  accountUsername: string;
 }
 
 /**
@@ -206,7 +208,11 @@ export default class TownsServiceClient {
     return TownsServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
-  async joinTown(requestData: TownJoinRequest): Promise<TownJoinResponse> {
+  async joinTown(requestData: TownJoinRequest, requestConfig?: RequestConfig): Promise<TownJoinResponse> {
+    if (requestConfig) {
+      const responseWrapper = await this._axios.post('/sessions', requestData, requestConfig);
+      return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+    }
     const responseWrapper = await this._axios.post('/sessions', requestData);
     return TownsServiceClient.unwrapOrThrowError(responseWrapper);
   }

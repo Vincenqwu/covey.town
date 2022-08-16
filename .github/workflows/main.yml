@@ -29,6 +29,10 @@ jobs:
           TWILIO_API_KEY_SID: ${{ secrets.TWILIO_API_KEY_SID }}
           MONGO_URL: ${{ secrets.MONGO_URL }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+          AWS_BUCKET_REGION: ${{ secrets.AWS_BUCKET_REGION }}
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
         run: cd services/townService; npm install && npm run lint && npm test
 
       - name: Build and test frontend components
