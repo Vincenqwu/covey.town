@@ -1,16 +1,14 @@
 # Covey.Town
 
 Covey.Town provides a virtual meeting space where different groups of people can have simultaneous video calls, allowing participants to drift between different conversations, just like in real life.
-Covey.Town was built for Northeastern's [Spring 2021 software engineering course](https://neu-se.github.io/CS4530-CS5500-Spring-2021/), and is designed to be reused across semesters.
-You can view our reference deployment of the app at [app.covey.town](https://app.covey.town/) - this is the version that students built on, and our [project showcase](https://neu-se.github.io/CS4530-CS5500-Spring-2021/project-showcase) highlights select projects from Spring 2021.
 
-![Covey.Town Architecture](docs/covey-town-architecture.png)
+<img src = "docs/updatedDesign.png" width = "70%">
 
 The figure above depicts the high-level architecture of Covey.Town.
 The frontend client (in the `frontend` directory of this repository) uses the [PhaserJS Game Library](https://phaser.io) to create a 2D game interface, using tilemaps and sprites.
 The frontend implements video chat using the [Twilio Programmable Video](https://www.twilio.com/docs/video) API, and that aspect of the interface relies heavily on [Twilio's React Starter App](https://github.com/twilio/twilio-video-app-react). Twilio's React Starter App is packaged and reused under the Apache License, 2.0.
 
-A backend service (in the `services/townService` directory) implements the application logic: tracking which "towns" are available to be joined, and the state of each of those towns.
+A backend service (in the `services/townService` directory) implements the application logic: tracking which "towns" are available for a user to join, and the state of each of those towns. The user and town's data is stored in the `MongoDB` database. Users can register and sign in to the application to access the town service. Users can find the towns they created previously, and manage and update profile information such as password and email. Users can also upload profile images that will be stored in `AWS S3 bucket`. 
 
 ## Running this app locally
 
@@ -31,6 +29,12 @@ To create an account and configure your local environment:
 | `TWILIO_API_KEY_SID`    | The SID of the new API key you created.   |
 | `TWILIO_API_KEY_SECRET` | The secret for the API key you created.   |
 | `TWILIO_API_AUTH_TOKEN` | Visible on your twilio account dashboard. |
+| `MONGO_URL`             | MongoDB connection string                 |
+| `JWT_SECRET`            | JWT secret key                                 |
+| `BUCKET`                | AWS S3 bucket name                        |
+| `AWS_BUCKET_REGION `    | AWS S3 bucket region, e.g., us-west-1     |
+| `AWS_ACCESS_KEY `       | Access key of IAM user who has access to the S3 bucket |
+| `AWS_SECRET_KEY`        | Secret key of IAM user who has access to the S3 bucket |
 
 ### Starting the backend
 
@@ -40,6 +44,8 @@ The backend will automatically restart if you change any of the files in the `se
 ### Configuring the frontend
 
 Create a `.env` file in the `frontend` directory, with the line: `REACT_APP_TOWNS_SERVICE_URL=http://localhost:8081` (if you deploy the towns service to another location, put that location here instead)
+
+Also include the line: `REACT_APP_AWS_SERVICE_URL=<Base URL of the AWS S3 bucket>` (Make sure to have the AWS S3 bucket and IAM user access key ready)  
 
 ### Running the frontend
 
