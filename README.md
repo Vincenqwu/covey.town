@@ -30,9 +30,9 @@ To create an account and configure your local environment:
 | `TWILIO_API_KEY_SECRET` | The secret for the API key you created.   |
 | `TWILIO_API_AUTH_TOKEN` | Visible on your twilio account dashboard. |
 | `MONGO_URL`             | MongoDB connection string                 |
-| `JWT_SECRET`            | JWT secret key                                 |
-| `BUCKET`                | AWS S3 bucket name                        |
-| `AWS_BUCKET_REGION `    | AWS S3 bucket region, e.g., us-west-1     |
+| `JWT_SECRET`            | JWT secret key                            |
+| `AWS_BUCKET_NAME`       | AWS S3 bucket name                        |
+| `AWS_BUCKET_REGION`     | AWS S3 bucket region, e.g., us-west-1     |
 | `AWS_ACCESS_KEY `       | Access key of IAM user who has access to the S3 bucket |
 | `AWS_SECRET_KEY`        | Secret key of IAM user who has access to the S3 bucket |
 
