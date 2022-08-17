@@ -24,12 +24,12 @@ export default function TownRecord(Props: { username: any; token : any; }){
                 }
             );
             const currentTowns = response.data;
-            console.log("create town");
-            console.log(currentCreatedTowns);
+            // console.log("create town");
+            // console.log(currentCreatedTowns);
             setCurrentCreatedTowns(currentTowns);
             } catch (err) {
                 if (err instanceof Error) {
-                    console.log("town create record");
+                    // console.log("town create record");
                     console.log(err.message);
                 }
             }
@@ -46,11 +46,11 @@ export default function TownRecord(Props: { username: any; token : any; }){
                 }
             );
             const lastTown = response.data;
-            console.log(lastTown);
+            // console.log(lastTown);
             setLastVisitedTown(lastTown);
             } catch (err) {
                 if (err instanceof Error) {
-                    console.log("town visit record");
+                    // console.log("town visit record");
                     console.log(err.message);
                 }
             }
@@ -58,11 +58,11 @@ export default function TownRecord(Props: { username: any; token : any; }){
 
     useEffect(()=>{
         getCreatedTowns();
-    }, [username, currentCreatedTowns, lastVisitedTown]);
+    }, [username, currentCreatedTowns]);
 
     useEffect(()=>{
         getLastVisitedTown();
-    }, [username, currentCreatedTowns, lastVisitedTown]);
+    }, [username, lastVisitedTown]);
 
     
     const handleDelete = async(townID: any, townPassword: any) => {
@@ -77,7 +77,7 @@ export default function TownRecord(Props: { username: any; token : any; }){
             );
             } catch (err) {
                 if (err instanceof Error) {
-                    console.log("town delete");
+                    // console.log("town delete");
                     console.log(err.message);
                 }
             }
